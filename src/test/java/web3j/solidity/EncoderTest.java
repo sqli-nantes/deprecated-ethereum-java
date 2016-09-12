@@ -82,14 +82,6 @@ public class EncoderTest {
                 "'value': -1,             " +
                 "'expected': 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'}");
 
-        list.add("{ 'type': 'SInt', " +
-                "'value': 0.1,             " +
-                "'expected': '0000000000000000000000000000000000000000000000000000000000000000'}");
-
-        list.add("{ 'type': 'SInt', " +
-                "'value': 3.9,             " +
-                "'expected': '0000000000000000000000000000000000000000000000000000000000000003'}");
-
         list.add("{ 'type': 'SInt256', " +
                 "'value': 1,            " +
                 "'expected': '0000000000000000000000000000000000000000000000000000000000000001'}");
@@ -109,14 +101,6 @@ public class EncoderTest {
         list.add("{ 'type': 'USInt', " +
                 "'value': 16,              " +
                 "'expected': '0000000000000000000000000000000000000000000000000000000000000010'}");
-
-        list.add("{ 'type': 'USInt', " +
-                "'value': 0.1,             " +
-                "'expected': '0000000000000000000000000000000000000000000000000000000000000000'}");
-
-        list.add("{ 'type': 'USInt', " +
-                "'value': 3.9,             " +
-                "'expected': '0000000000000000000000000000000000000000000000000000000000000003'}");
 
         list.add("{ 'type': 'USInt256', " +
                 "'value': 1,            " +
@@ -216,6 +200,29 @@ public class EncoderTest {
 
         return parseTests(list);
 
+    }
+
+    private Object[] parametersForTestEncodeFail(){
+        /*List<String> list = new ArrayList<>();
+
+        list.add("{ 'type': 'USInt', " +
+                "'value': 0.1,             " +
+                "'expected': '0000000000000000000000000000000000000000000000000000000000000000'}");
+
+        list.add("{ 'type': 'USInt', " +
+                "'value': 3.9,             " +
+                "'expected': '0000000000000000000000000000000000000000000000000000000000000003'}");
+
+        list.add("{ 'type': 'SInt', " +
+                "'value': 0.1,             " +
+                "'expected': '0000000000000000000000000000000000000000000000000000000000000000'}");
+
+        list.add("{ 'type': 'SInt', " +
+                "'value': 3.9,             " +
+                "'expected': '0000000000000000000000000000000000000000000000000000000000000003'}");
+
+        return null;*/
+        return null;
     }
 
     private class Test {
