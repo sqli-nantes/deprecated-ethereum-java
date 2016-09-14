@@ -20,7 +20,7 @@ public abstract class SInt<T> extends SType<T> {
     public static SInt8 fromByte(byte from) {
         return new SInt8(from);
     }
-    public static SInt16 fromByte(short from) {
+    public static SInt16 fromShort(short from) {
         return new SInt16(from);
     }
     public static SInt32 fromInteger(int from) {

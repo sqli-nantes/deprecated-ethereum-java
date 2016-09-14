@@ -3,6 +3,7 @@ package web3j.solidity;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import web3j.solidity.types.SAddress;
 import web3j.solidity.types.SBool;
 import web3j.solidity.types.SInt;
 import web3j.solidity.types.SString;
+import web3j.solidity.types.SUInt;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -26,29 +28,13 @@ import static junit.framework.TestCase.assertEquals;
 public class EncoderTest {
 
 
-    private Object[] parametersForTestEncoder(){
+    private Object[] parametersForTestEncoderSimpleType(){
 
         List<String> list = new ArrayList<>();
 
         list.add("{ 'type' : 'SAddress', " +
                 "'value' : '0x407d73d8a49eeb85d32cf465507dd71d507100c1'," +
                 "'expected': '000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1'}");
-
-        list.add("{ 'type': 'SAddress[2]', " +
-                "'value': ['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x407d73d8a49eeb85d32cf465507dd71d507100c3']," +
-                "'expected': '000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c3' }");
-
-        list.add("{ 'type': 'SAddress[]', " +
-                "'value': ['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x407d73d8a49eeb85d32cf465507dd71d507100c3']," +
-                "'expected' : '00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000002000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c3' }");
-
-        list.add("{ 'type': 'SAddress[][2]', " +
-                "'value': [['', ''], ['', '']], " +
-                "'expected': '000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000002000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c20000000000000000000000000000000000000000000000000000000000000002000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c3000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c4' }");
-
-        list.add("{ 'type': 'SAddress[2][]', " +
-                "'value': [['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x407d73d8a49eeb85d32cf465507dd71d507100c2'], ['0x407d73d8a49eeb85d32cf465507dd71d507100c3', '0x407d73d8a49eeb85d32cf465507dd71d507100c4']], " +
-                "'expected': '00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000002000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c2000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c3000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c4' }");
 
         list.add("{ 'type': 'SBool', " +
                 "'value': true," +
@@ -58,18 +44,6 @@ public class EncoderTest {
                 "'value': false,          " +
                 "'expected': '0000000000000000000000000000000000000000000000000000000000000000'}");
 
-        list.add("{ 'type': 'SBool[1][2]', " +
-                "'value': [[false], [false]]," +
-                "'expected': '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'}");
-
-        list.add("{ 'type': 'SBool[2]', " +
-                "'value': [true, false]," +
-                "'expected': '00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000'}");
-
-        list.add("{ 'type': 'SBool[]', " +
-                "'value': [true, true, false]," +
-                "'expected': '00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000'}");
-
         list.add("{ 'type': 'SInt', " +
                 "'value': 1," +
                 "'expected': '0000000000000000000000000000000000000000000000000000000000000001'}");
@@ -77,10 +51,6 @@ public class EncoderTest {
         list.add("{ 'type': 'SInt', " +
                 "'value': 16,              " +
                 "'expected': '0000000000000000000000000000000000000000000000000000000000000010'}");
-
-        list.add("{ 'type': 'SInt', " +
-                "'value': -1,             " +
-                "'expected': 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'}");
 
         list.add("{ 'type': 'SInt256', " +
                 "'value': 1,            " +
@@ -90,29 +60,21 @@ public class EncoderTest {
                 "'value': 16,           " +
                 "'expected': '0000000000000000000000000000000000000000000000000000000000000010'}");
 
-        list.add("{ 'type': 'SInt256', " +
-                "'value': -1,           " +
-                "'expected': 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'}");
-
-        list.add("{ 'type': 'USInt', " +
+        list.add("{ 'type': 'SUInt', " +
                 "'value': 1,               " +
                 "'expected': '0000000000000000000000000000000000000000000000000000000000000001'}");
 
-        list.add("{ 'type': 'USInt', " +
+        list.add("{ 'type': 'SUInt', " +
                 "'value': 16,              " +
                 "'expected': '0000000000000000000000000000000000000000000000000000000000000010'}");
 
-        list.add("{ 'type': 'USInt256', " +
+        list.add("{ 'type': 'SUInt256', " +
                 "'value': 1,            " +
                 "'expected': '0000000000000000000000000000000000000000000000000000000000000001'}");
 
-        list.add("{ 'type': 'USInt256', " +
+        list.add("{ 'type': 'SUInt256', " +
                 "'value': 16,           " +
                 "'expected': '0000000000000000000000000000000000000000000000000000000000000010'}");
-
-        list.add("{ 'type': 'USInt256'," +
-                "'value': '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'," +
-                "'expected': 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'}");
 
         list.add("{ 'type': 'SBytes32', " +
                 "'value': '0x6761766f66796f726b'," +
@@ -166,6 +128,53 @@ public class EncoderTest {
                 "'value': 'Ã'," +
                 "'expected': '00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000002c383000000000000000000000000000000000000000000000000000000000000'}");
 
+        list.add("{ 'type': 'SBytes', " +
+                "'value': '0x131a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b231a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b'," +
+                "'expected': '00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000040131a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b231a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b'}");
+
+        list.add("{ 'type': 'SBytes', " +
+                "'value': '0x131a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b231a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b331a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b'," +
+                "'expected': '00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060131a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b231a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b331a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b'}");
+
+        list.add("{ 'type': 'SString', " +
+                "'value': 'welcome to ethereum. welcome to ethereum. welcome to ethereum.'," +
+                "'expected': '0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003e77656c636f6d6520746f20657468657265756d2e2077656c636f6d6520746f20657468657265756d2e2077656c636f6d6520746f20657468657265756d2e0000'}");
+
+        return parseTests(list);
+
+    }
+
+    private Object[] parametersForTestEncoderComplexType(){
+        List<String> list = new ArrayList<>();
+
+        list.add("{ 'type': 'SAddress[2]', " +
+                "'value': ['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x407d73d8a49eeb85d32cf465507dd71d507100c3']," +
+                "'expected': '000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c3' }");
+
+        list.add("{ 'type': 'SAddress[]', " +
+                "'value': ['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x407d73d8a49eeb85d32cf465507dd71d507100c3']," +
+                "'expected' : '00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000002000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c3' }");
+
+        list.add("{ 'type': 'SAddress[][2]', " +
+                "'value': [['', ''], ['', '']], " +
+                "'expected': '000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000002000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c20000000000000000000000000000000000000000000000000000000000000002000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c3000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c4' }");
+
+        list.add("{ 'type': 'SAddress[2][]', " +
+                "'value': [['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x407d73d8a49eeb85d32cf465507dd71d507100c2'], ['0x407d73d8a49eeb85d32cf465507dd71d507100c3', '0x407d73d8a49eeb85d32cf465507dd71d507100c4']], " +
+                "'expected': '00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000002000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c2000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c3000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c4' }");
+
+        list.add("{ 'type': 'SBool[1][2]', " +
+                "'value': [[false], [false]]," +
+                "'expected': '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'}");
+
+        list.add("{ 'type': 'SBool[2]', " +
+                "'value': [true, false]," +
+                "'expected': '00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000'}");
+
+        list.add("{ 'type': 'SBool[]', " +
+                "'value': [true, true, false]," +
+                "'expected': '00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000'}");
+
         list.add("{ 'type': 'SInt[]', " +
                 "'value': [],            " +
                 "'expected': '00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000'}");
@@ -186,23 +195,10 @@ public class EncoderTest {
                 "'value': ['0xcf', '0x68', '0x4d', '0xfb']," +
                 "'expected': 'cf0000000000000000000000000000000000000000000000000000000000000068000000000000000000000000000000000000000000000000000000000000004d00000000000000000000000000000000000000000000000000000000000000fb00000000000000000000000000000000000000000000000000000000000000'}");
 
-        list.add("{ 'type': 'SBytes', " +
-                "'value': '0x131a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b231a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b'," +
-                "'expected': '00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000040131a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b231a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b'}");
-
-        list.add("{ 'type': 'SBytes', " +
-                "'value': '0x131a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b231a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b331a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b'," +
-                "'expected': '00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000060131a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b231a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b331a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b'}");
-
-        list.add("{ 'type': 'SString', " +
-                "'value': 'welcome to ethereum. welcome to ethereum. welcome to ethereum.'," +
-                "'expected': '0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003e77656c636f6d6520746f20657468657265756d2e2077656c636f6d6520746f20657468657265756d2e2077656c636f6d6520746f20657468657265756d2e0000'}");
-
-        return parseTests(list);
-
+        return list.toArray();
     }
 
-    private Object[] parametersForTestEncodeFail(){
+    private Object[] parametersForTestEncodeSimpleTypeFail(){
         /*List<String> list = new ArrayList<>();
 
         list.add("{ 'type': 'USInt', " +
@@ -221,6 +217,17 @@ public class EncoderTest {
                 "'value': 3.9,             " +
                 "'expected': '0000000000000000000000000000000000000000000000000000000000000003'}");
 
+        list.add("{ 'type': 'SInt256', " +
+                "'value': -1,           " +
+                "'expected': 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'}");
+
+        list.add("{ 'type': 'SUInt256'," +
+                "'value': '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'," +
+                "'expected': 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'}");
+
+        list.add("{ 'type': 'SInt', " +
+                "'value': -1,             " +
+                "'expected': 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'}");
         return null;*/
         return null;
     }
@@ -246,8 +253,22 @@ public class EncoderTest {
                 input = SString.fromString(test.value.getAsString());
             } else if( test.type.compareTo("SAddress ") == 0  ){
                 input = SAddress.fromString(test.value.getAsString());
-            } else if( test.type.compareTo("SInt") == 0 ){
-                input = SInt.fromBigInteger256(test.value.getAsBigInteger());
+            } else if( test.type.contains("SInt") ){
+                String size = test.type.substring(4);
+                if( size.length()==0 || Integer.parseInt(size) == 256) input = SInt.fromBigInteger256(test.value.getAsBigInteger());
+                else if( Integer.parseInt(size) == 8) input = SInt.fromByte(test.value.getAsByte());
+                else if( Integer.parseInt(size) == 16) input = SInt.fromShort(test.value.getAsShort());
+                else if( Integer.parseInt(size) == 32) input = SInt.fromInteger(test.value.getAsInt());
+                else if( Integer.parseInt(size) == 64) input = SInt.fromLong(test.value.getAsLong());
+                else if( Integer.parseInt(size) == 128) input = SInt.fromBigInteger128(test.value.getAsBigInteger());
+            } else if( test.type.contains("SUInt") ){
+                String size = test.type.substring(5);
+                if( size.length()==0 || Integer.parseInt(size) == 256) input = SUInt.fromBigInteger256(test.value.getAsBigInteger());
+                else if( Integer.parseInt(size) == 8) input = SUInt.fromShort(test.value.getAsShort());
+                else if( Integer.parseInt(size) == 16) input = SUInt.fromInteger(test.value.getAsInt());
+                else if( Integer.parseInt(size) == 32) input = SUInt.fromLong(test.value.getAsLong());
+                else if( Integer.parseInt(size) == 64) input = SUInt.fromBigInteger64(test.value.getAsBigInteger());
+                else if( Integer.parseInt(size) == 128) input = SUInt.fromBigInteger128(test.value.getAsBigInteger());
             }
             if(input != null) {
                 listI.add(input);
@@ -261,10 +282,17 @@ public class EncoderTest {
 
     @org.junit.Test
     @Parameters
-    public void testEncoder(Object param,String expected) throws Exception{
+    public void testEncoderSimpleType(Object param,String expected) throws Exception{
         String result = SCoder.encodeParams(new Object[]{param});
         assertEquals(expected,result);
     }
+
+/*    @org.junit.Test
+    @Parameters
+    public void testEncodeSimpleTypeFail() throws Exception{
+       *//* String result = SCoder.encodeParams(new Object[]{param});
+        assertEquals(expected,result);*//*
+    }*/
 
 
 
