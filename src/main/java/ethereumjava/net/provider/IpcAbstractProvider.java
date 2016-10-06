@@ -7,7 +7,7 @@ import ethereumjava.exception.EthereumJavaException;
  */
 public abstract class IpcAbstractProvider extends AbstractProvider {
 
-    final String ipcFilePath;
+    public final String ipcFilePath;
 
     public IpcAbstractProvider(String _ipcFilePath) throws EthereumJavaException {
         super();

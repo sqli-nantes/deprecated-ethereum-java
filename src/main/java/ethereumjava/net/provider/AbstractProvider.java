@@ -40,8 +40,8 @@ public abstract  class AbstractProvider implements Provider{
     DataOutputStream out;
     BufferedReader in;
 
-    OutputStream outputStream;
-    InputStream inputStream;
+    public OutputStream outputStream;
+    public InputStream inputStream;
 
     Gson gson;
 
