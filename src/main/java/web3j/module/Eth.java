@@ -23,6 +23,7 @@ public interface Eth {
     BigInteger balance(String account);
     Observable<BigDecimal> getBalance(String account);
 
+    /* transactionType is Transaction object or Hash string. */
     @web3j.module.annotation.EthereumMethod(name="getBlockByHash")
     <T extends Web3JType> Block<T> block(Hash hash, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
     <T extends Web3JType> Observable<Block<T>> getBlock(Hash hash, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);

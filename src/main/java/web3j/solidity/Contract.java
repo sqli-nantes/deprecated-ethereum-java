@@ -24,6 +24,7 @@ public class Contract<T extends ContractType> {
     }
 
     public T at(String address){
+        this.address = address;
         return (T) Proxy.newProxyInstance(abi.getClassLoader(),new Class[]{abi},new InvocationHandler());
     }
 

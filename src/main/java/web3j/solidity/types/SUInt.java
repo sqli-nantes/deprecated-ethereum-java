@@ -13,8 +13,6 @@ public abstract class SUInt<T> extends SType<T> {
 
     private SUInt(T value) {
         super(value);
-        //InputIntFormatter()
-        //OutputUIntFormatter()
     }
 
     public static SUInt8 fromShort(short from){

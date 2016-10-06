@@ -31,8 +31,6 @@ public class Web3J {
         this.contract = contract;
     }
 
-
-
     public static class Builder {
 
         private InvocationHandler handler;

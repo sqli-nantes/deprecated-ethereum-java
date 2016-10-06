@@ -3,6 +3,8 @@ package web3j.solidity.types;
 
 import java.util.regex.Pattern;
 
+import web3j.exception.Web3JException;
+
 /**
  * Created by gunicolas on 16/08/16.
  */
@@ -10,12 +12,11 @@ public class SBytes extends SType<Byte[]> {
 
     private SBytes(Byte[] value) {
         super(value);
-        //InputBytesFormatter()
-        //OuputBytesFormatter()
     }
 
 
     public static SBytes fromByteArray(Byte[] value){
+        if( value.length > 32 ) throw new Web3JException("illegal argument. SBytes is limited to 32 bytes length.");
         return new SBytes(value);
     }
 
@@ -44,7 +45,12 @@ public class SBytes extends SType<Byte[]> {
 
     @Override
     public String asString() {
-        return value.toString(); //TODO ???
+        StringBuilder sb = new StringBuilder();
+        for(Byte b : value){
+            if( b == null ) break;
+            sb.append(String.format("%02X",b & 0xff).toLowerCase());
+        }
+        return sb.toString();
     }
 
 

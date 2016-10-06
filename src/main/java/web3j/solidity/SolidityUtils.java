@@ -56,7 +56,7 @@ public abstract class SolidityUtils {
     }
 
     public static String padRight(String toPad,int nbChars,char sign){
-        return  toPad + new String(new char[nbChars-toPad.length() +1]).replace('\0',sign);
+        return  toPad + new String(new char[nbChars-toPad.length()]).replace('\0',sign);
     }
     public static String padRightWithZeros(String toPad,int nbChars){
         return padRight(toPad,nbChars,'0');

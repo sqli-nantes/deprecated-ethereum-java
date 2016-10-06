@@ -1,6 +1,7 @@
 package web3j.solidity;
 
 import java.lang.reflect.Method;
+import java.math.BigInteger;
 
 import web3j.module.Eth;
 import web3j.module.objects.Hash;
@@ -37,14 +38,22 @@ public class SolidityFunction<T> {
     }
 
     private String toPayload(){
-        return "0x"+this.signature()+ SCoder.encodeParams(args);
+        String encodedParameters = "";
+        if( args != null ) encodedParameters = SCoder.encodeParams(args);
+        return "0x"+this.signature()+ encodedParameters;
     }
 
-    public Hash sendTransaction(TransactionRequest request){
+    public Hash sendTransaction(String from, BigInteger gas){
+        //TODO can estimate gas before
         String payload = toPayload();
+        TransactionRequest request = new TransactionRequest(from,address);
+        request.setGas(gas);
         request.setDataHex(payload);
-        request.setToHex(address);
         return eth.sendTransaction(request);
+    }
+
+    public void call(){
+        //TODO
     }
 
 }

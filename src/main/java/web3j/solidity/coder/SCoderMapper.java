@@ -5,9 +5,13 @@ import java.util.Map;
 
 import web3j.solidity.coder.decoder.SDecoder;
 import web3j.solidity.coder.decoder.SIntDecoder;
+import web3j.solidity.coder.encoder.SBytesEncoder;
 import web3j.solidity.coder.encoder.SEncoder;
 import web3j.solidity.coder.encoder.SIntEncoder;
+import web3j.solidity.coder.encoder.SUIntEncoder;
+import web3j.solidity.types.SBytes;
 import web3j.solidity.types.SInt;
+import web3j.solidity.types.SUInt;
 
 /**
  * Mapping between Solidity types and coders (Encoders/Decoders).
@@ -17,6 +21,8 @@ public abstract class SCoderMapper {
 
     private static final Map<Class,Class<? extends SEncoder>> encoderMapping = new HashMap<Class,Class<? extends SEncoder>>(){{
         put(SInt.class,SIntEncoder.class);
+        put(SUInt.class,SUIntEncoder.class); //TODO SUIntEncoder == SIntEncoder --> Refactor to use the same encoder
+        put(SBytes.class, SBytesEncoder.class);
     }};
 
 
