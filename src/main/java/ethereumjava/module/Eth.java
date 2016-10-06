@@ -12,7 +12,7 @@ import ethereumjava.module.objects.Hash;
 import ethereumjava.module.objects.Transaction;
 import ethereumjava.module.objects.TransactionReceipt;
 import ethereumjava.module.objects.TransactionRequest;
-import ethereumjava.module.objects.Web3JType;
+import ethereumjava.module.objects.TransactionFormat;
 
 /**
  * Created by gunicolas on 23/08/16.
@@ -24,12 +24,12 @@ public interface  Eth {
     Observable<BigDecimal> getBalance(String account);
 
     @ethereumjava.module.annotation.EthereumMethod(name="getBlockByHash")
-    <T extends Web3JType> Block<T> block(Hash hash, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
-    <T extends Web3JType> Observable<Block<T>> getBlock(Hash hash, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
+    <T extends TransactionFormat> Block<T> block(Hash hash, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
+    <T extends TransactionFormat> Observable<Block<T>> getBlock(Hash hash, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
 
     @ethereumjava.module.annotation.EthereumMethod(name="getBlockByNumber")
-    <T extends Web3JType> Block<T> block(BigInteger number, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
-    <T extends Web3JType> Observable<Block<T>> getBlock(BigInteger number, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
+    <T extends TransactionFormat> Block<T> block(BigInteger number, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
+    <T extends TransactionFormat> Observable<Block<T>> getBlock(BigInteger number, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
 
     @ethereumjava.module.annotation.EthereumMethod(name="getTransactionByHash")
     Transaction transaction(Hash hash);

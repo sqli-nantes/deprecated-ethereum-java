@@ -5,7 +5,7 @@ import java.math.BigInteger;
 /**
  * Created by gunicolas on 26/08/16.
  */
-public class Transaction extends Web3JType {
+public class Transaction extends TransactionFormat {
 
     public Hash hash;
     public BigInteger nonce;

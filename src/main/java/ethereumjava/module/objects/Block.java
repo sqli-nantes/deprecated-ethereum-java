@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by gunicolas on 23/08/16.
  */
-public class Block<T extends Web3JType> {
+public class Block<T extends TransactionFormat> {
 
     public BigInteger number;
     public Hash hash;

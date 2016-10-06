@@ -4,7 +4,7 @@ package ethereumjava.module.objects;
 /**
  * Created by gunicolas on 25/08/16.
  */
-public class Hash extends Web3JType {
+public class Hash extends TransactionFormat {
 
     String value;
 
