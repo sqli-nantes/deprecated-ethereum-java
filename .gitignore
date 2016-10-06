@@ -1,10 +1,9 @@
 /build
 /coverage/
-/blockchain-web3J.iml
+/ethereum-java.iml.iml
 /local.properties
-/gradlew.bat
-/gradlew
 /gradle/
 /.idea/
 /.gradle/
 .gradle/
+/blockchain-web3J.iml
