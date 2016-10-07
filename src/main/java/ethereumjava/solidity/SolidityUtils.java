@@ -130,9 +130,12 @@ public abstract class SolidityUtils {
     public static String transformToFullName(Method method) throws JSONException {
         StringBuilder sbStr = new StringBuilder();
         int i=0;
-        for (Class c : method.getParameterTypes()) {
+        Class[] parameters = method.getParameterTypes();
+        for (Class c : parameters) {
             sbStr.append(c.getSimpleName().substring(1).toLowerCase());
-            if (i <  method.getParameterCount()-1 ) sbStr.append(",");
+            if( i < parameters.length-1 ){
+                sbStr.append(",");
+            }
             i++;
         }
         return method.getName() + '(' + sbStr.toString() + ')';

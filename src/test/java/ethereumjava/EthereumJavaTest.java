@@ -17,11 +17,8 @@ public class EthereumJavaTest {
 
     @Before
     public void setup() throws Exception{
-        provider = new RpcProvider("http://localhost:8545");
-        provider.init();
-        provider.startListening();
         ethereumJava = new EthereumJava.Builder()
-                .provider(provider)
+                .provider(new RpcProvider("http://localhost:8545"))
                 .build();
     }
 
@@ -33,7 +30,7 @@ public class EthereumJavaTest {
 
     @After
     public void after() throws Exception{
-        provider.stop();
+        ethereumJava.close();
     }
 
 

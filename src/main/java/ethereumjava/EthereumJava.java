@@ -24,11 +24,18 @@ public class EthereumJava {
     public Eth eth;
     public Contract contract;
 
-    private EthereumJava(Admin admin, Personal personal, Eth eth,Contract contract) {
+    private Provider provider;
+
+    private EthereumJava(Provider provider,Admin admin, Personal personal, Eth eth,Contract contract) {
         this.admin = admin;
         this.personal = personal;
         this.eth = eth;
         this.contract = contract;
+        this.provider = provider;
+    }
+
+    public void close(){
+        provider.stop();
     }
 
     public static class Builder {
@@ -44,12 +51,14 @@ public class EthereumJava {
             return this;
         }
         public EthereumJava build() throws EthereumJavaException {
-            if( handler == null ) throw new EthereumJavaException("Missing provider");
+            if( this.provider == null || handler == null ) throw new EthereumJavaException("Missing provider");
+            provider.init();
+            provider.startListening();
             Admin admin = (Admin) Proxy.newProxyInstance(Admin.class.getClassLoader(), new Class[]{Admin.class},handler);
             Personal personal = (Personal) Proxy.newProxyInstance(Personal.class.getClassLoader(),new Class[]{Personal.class},handler);
             Eth eth = (Eth) Proxy.newProxyInstance(Eth.class.getClassLoader(),new Class[]{Eth.class},handler);
             Contract contract = new Contract(eth);
-            return new EthereumJava(admin,personal,eth,contract);
+            return new EthereumJava(provider,admin,personal,eth,contract);
         }
 
     }
@@ -110,6 +119,8 @@ public class EthereumJava {
             }
             return result;
         }
+
+
 
     }
 
