@@ -28,7 +28,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'org.json:json:20160810'
     compile 'junit:junit:4.12'
-    compile files('libs/juds-0.95.jar')
 
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
