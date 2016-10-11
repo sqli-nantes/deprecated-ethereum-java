@@ -2,8 +2,6 @@ package ethereumjava.net.provider;
 
 
 
-import java.io.IOException;
-
 import ethereumjava.exception.EthereumJavaException;
 
 /**
@@ -16,7 +14,4 @@ public class JavaIpcProvider extends IpcAbstractProvider {
         super(_ipcFilePath);
     }
 
-    @Override
-    protected void setStreams() throws IOException {
-    }
 }

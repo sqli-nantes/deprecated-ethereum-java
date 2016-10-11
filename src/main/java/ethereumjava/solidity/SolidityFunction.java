@@ -2,12 +2,14 @@ package ethereumjava.solidity;
 
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.util.List;
 
 import ethereumjava.module.Eth;
 import ethereumjava.module.objects.Hash;
 import ethereumjava.module.objects.TransactionRequest;
 import ethereumjava.sha3.Sha3;
 import ethereumjava.solidity.coder.SCoder;
+import ethereumjava.solidity.types.SType;
 
 /**
  * Created by gunicolas on 4/08/16.
@@ -17,7 +19,7 @@ import ethereumjava.solidity.coder.SCoder;
  *
  * @param <T> return type
  */
-public class SolidityFunction<T> {
+public class SolidityFunction<T extends SType> {
 
     Method method;
     Eth eth;
@@ -43,17 +45,28 @@ public class SolidityFunction<T> {
         return "0x"+this.signature()+ encodedParameters;
     }
 
-    public Hash sendTransaction(String from, BigInteger gas){
+    private List<T> decodeResponse(String dataHex){
+        //TODO use decoder;
+        return null;
+    }
+
+
+    private TransactionRequest formatRequest(String from, BigInteger gas){
         //TODO can estimate gas before
         String payload = toPayload();
         TransactionRequest request = new TransactionRequest(from,address);
         request.setGas(gas);
         request.setDataHex(payload);
-        return eth.sendTransaction(request);
+        return request;
     }
 
-    public void call(){
-        //TODO
+    public Hash sendTransaction(String from, BigInteger gas){
+        return eth.sendTransaction(formatRequest(from,gas));
+    }
+
+    public List<T> call(String from, BigInteger gas){
+        String encodedResponse = eth.call(formatRequest(from,gas));
+        return decodeResponse(encodedResponse);
     }
 
 }

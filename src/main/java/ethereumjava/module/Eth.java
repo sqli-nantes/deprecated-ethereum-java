@@ -3,6 +3,7 @@ package ethereumjava.module;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import ethereumjava.solidity.SolidityUtils;
 import rx.Observable;
 import ethereumjava.module.annotation.ConvertParam;
 import ethereumjava.module.annotation.EthereumMethod;
@@ -19,23 +20,23 @@ import ethereumjava.module.objects.TransactionFormat;
  */
 public interface  Eth {
 
-    @ethereumjava.module.annotation.EthereumMethod(name="getBalance")
+    @EthereumMethod(name="getBalance")
     BigInteger balance(String account);
     Observable<BigDecimal> getBalance(String account);
 
-    @ethereumjava.module.annotation.EthereumMethod(name="getBlockByHash")
+    @EthereumMethod(name="getBlockByHash")
     <T extends TransactionFormat> Block<T> block(Hash hash, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
     <T extends TransactionFormat> Observable<Block<T>> getBlock(Hash hash, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
 
-    @ethereumjava.module.annotation.EthereumMethod(name="getBlockByNumber")
+    @EthereumMethod(name="getBlockByNumber")
     <T extends TransactionFormat> Block<T> block(BigInteger number, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
     <T extends TransactionFormat> Observable<Block<T>> getBlock(BigInteger number, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
 
-    @ethereumjava.module.annotation.EthereumMethod(name="getTransactionByHash")
+    @EthereumMethod(name="getTransactionByHash")
     Transaction transaction(Hash hash);
     Observable<Transaction> getTransaction(Hash hash);
 
-    @ethereumjava.module.annotation.EthereumMethod(name="getTransactionReceipt")
+    @EthereumMethod(name="getTransactionReceipt")
     TransactionReceipt transactionReceipt(Hash hash);
     Observable<TransactionReceipt> getTransactionReceipt(Hash hash);
 

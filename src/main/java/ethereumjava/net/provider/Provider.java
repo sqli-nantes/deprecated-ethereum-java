@@ -17,12 +17,6 @@ public interface Provider {
      */
     <T> Observable<T> sendRequest(Request request);
 
-    /**
-     *
-     * @throws EthereumJavaException
-     */
-    void startListening() throws EthereumJavaException;
-
     void init() throws EthereumJavaException;
     void stop() throws EthereumJavaException;
 
