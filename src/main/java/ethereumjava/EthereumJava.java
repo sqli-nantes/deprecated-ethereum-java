@@ -53,7 +53,6 @@ public class EthereumJava {
         public EthereumJava build() throws EthereumJavaException {
             if( this.provider == null || handler == null ) throw new EthereumJavaException("Missing provider");
             provider.init();
-            provider.startListening();
             Admin admin = (Admin) Proxy.newProxyInstance(Admin.class.getClassLoader(), new Class[]{Admin.class},handler);
             Personal personal = (Personal) Proxy.newProxyInstance(Personal.class.getClassLoader(),new Class[]{Personal.class},handler);
             Eth eth = (Eth) Proxy.newProxyInstance(Eth.class.getClassLoader(),new Class[]{Eth.class},handler);

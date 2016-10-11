@@ -18,7 +18,7 @@ public class EthereumJavaTest {
     @Before
     public void setup() throws Exception{
         ethereumJava = new EthereumJava.Builder()
-                .provider(new RpcProvider("http://localhost:8545"))
+                .provider(new RpcProvider("http://localhost:8547"))
                 .build();
     }
 

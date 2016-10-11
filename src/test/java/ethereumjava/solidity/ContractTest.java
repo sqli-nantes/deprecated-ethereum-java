@@ -43,7 +43,7 @@ public class ContractTest {
     public void contractCreationTest() throws Exception {
        MyContract contract = (MyContract) ethereumJava.contract.withAbi(MyContract.class).at("0x54684643138463"); //TODO remove cast
 
-        contract.foo(SInt.fromInteger(3)).sendTransaction("0x54686332268164868648",new BigInteger("90000"));
+        //contract.foo(SInt.fromInteger(3)).sendTransaction("0x54686332268164868648",new BigInteger("90000"));
 
     }
 }

@@ -7,7 +7,7 @@ import ethereumjava.solidity.types.SInt;
  */
 public interface MyContract extends ContractType {
 
-    SolidityFunction<Void> foo(SInt a);
+    //SolidityFunction<Void> foo(SInt a);
     SolidityFunction<SInt.SInt8> bar();
 
     SolidityFunction<SInt> i();
