@@ -6,6 +6,7 @@ import ethereumjava.module.objects.NodeInfo;
 import ethereumjava.net.provider.RpcProvider;
 import ethereumjava.solidity.ContractType;
 import ethereumjava.solidity.SolidityFunction;
+import ethereumjava.solidity.types.SUInt;
 import ethereumjava.solidity.types.SVoid;
 import org.junit.After;
 import org.junit.Before;
@@ -18,17 +19,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by gunicolas on 18/08/16.
  */
-public class RPCProviderTest {
-
-    EthereumJava ethereumJava;
-    RpcProvider provider;
-
-    @Before
-    public void setup() throws Exception{
-        ethereumJava = new EthereumJava.Builder()
-                .provider(new RpcProvider("http://localhost:8547"))
-                .build();
-    }
+public class RPCProviderTest extends EthereumJavaTest {
 
     @Test
     public void testModules() throws Exception{
@@ -46,6 +37,7 @@ public class RPCProviderTest {
         SolidityFunction<SVoid> StopRent();
         SolidityFunction<SVoid> StartRent();
         SolidityFunction<SVoid> ValidateTravel();
+        SolidityFunction<SVoid> GoTo(SUInt.SUInt256 x, SUInt.SUInt256 y);
     }
 
 
@@ -93,16 +85,16 @@ public class RPCProviderTest {
     public void testContractGoTo() throws Exception{
 
         Contract contract = (Contract) ethereumJava.contract.withAbi(Contract.class).at(CONTRACT_ADDRESS);
-        Hash txHash = contract.().sendTransaction(ACCOUNT, new BigInteger("90000"));
+        Hash txHash = contract
+                .GoTo(  SUInt.fromBigInteger256(BigInteger.valueOf(3)),
+                        SUInt.fromBigInteger256(BigInteger.valueOf(2)))
+                .sendTransaction(ACCOUNT, new BigInteger("90000"));
 
         assertTrue(txHash!=null);
 
     }
 
-    @After
-    public void after() throws Exception{
-        ethereumJava.close();
-    }
+
 
 
 }
