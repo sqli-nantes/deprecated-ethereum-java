@@ -4,6 +4,5 @@
 /local.properties
 /gradle/
 /.idea/
-/.gradle/
 .gradle/
 /blockchain-web3J.iml
