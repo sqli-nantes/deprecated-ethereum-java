@@ -9,5 +9,7 @@ script:
 
 notifications:
   slack:
+      on_success: change
+      on_failure: always
       rooms:
         - sqlinantes:ZvBQacDCX5Q116NmXbeZYGZU#team-blockchain
