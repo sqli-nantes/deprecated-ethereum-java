@@ -18,8 +18,7 @@ public class TransactionRequest {
     String dataHex;
 
     public TransactionRequest(String fromHex, String toHex) {
-        this.fromHex = fromHex;
-        this.toHex = toHex;
+        this(fromHex, toHex,null,null);
     }
 
     public TransactionRequest(String from, String to, String value, String data) {
@@ -48,12 +47,16 @@ public class TransactionRequest {
 
     @Override
     public String toString() {
-        return "{" +
-                "\"from\":\"" + fromHex + '\"' +
-                ",\"to\":\"" + toHex + '\"' +
-                ",\"gas\":\"" + gasHex + '\"' +
-                ",\"value\":\"" + valueHex + '\"' +
-                ",\"data\":\"" + dataHex + '\"' +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        if( fromHex != null ) sb.append("\"from\":\"").append(fromHex).append('\"');
+        if( toHex != null ) sb.append(",\"to\":\"").append(toHex).append('\"');
+        if( gasHex != null ) sb.append(",\"gas\":\"").append(gasHex).append('\"');
+        if( valueHex != null ) sb.append(",\"value\":\"").append(valueHex).append('\"');
+        if( dataHex != null ) sb.append(",\"data\":\"").append(dataHex).append('\"');
+        sb.append('}');
+
+        return sb.toString();
+
     }
 }

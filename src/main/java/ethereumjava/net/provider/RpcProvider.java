@@ -56,6 +56,7 @@ public class RpcProvider extends AbstractProvider {
     @Override
     protected Observable send(byte[] stringRequest, final Request request) {
         try {
+            System.out.println(new String(stringRequest));
             this.connection.connect();
             outputStream = this.connection.getOutputStream();
             outputStream.write(stringRequest);

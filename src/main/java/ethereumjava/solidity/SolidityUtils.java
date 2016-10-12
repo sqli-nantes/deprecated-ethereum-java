@@ -275,7 +275,9 @@ public abstract class SolidityUtils {
         return l_result.toString();
     }
 
+    /* format to hexadecimal the given objet. If the object is null or "empty", it returns null */
     public static String toHex(Object obj) throws IllegalArgumentException{
+        if( obj == null ) return null;
         if( isBoolean(obj) ){
             boolean b = (boolean) obj;
             if( b ) return "0x1";
@@ -288,6 +290,7 @@ public abstract class SolidityUtils {
             return utf8ToHex(json.toString());
         } else if( isString(obj) ){
             String s = (String) obj;
+            if( s.length() == 0 ) return null;
             if( s.contains("0x") ) return s;
             else if( isStringNumber(s) ){
                 return "0x"+bigDecimalToHexString(s);
@@ -426,8 +429,8 @@ public abstract class SolidityUtils {
     }
 
     public static boolean isStringNumber(String value){
-        Pattern integer = Pattern.compile("^(-|\\+)?[0-9]*$");
-        Pattern decimal = Pattern.compile("^(-|\\+)?[0-9]*\\.[0-9]*$");
+        Pattern integer = Pattern.compile("^(-|\\+)?[0-9]+$");
+        Pattern decimal = Pattern.compile("^(-|\\+)?[0-9]*\\.[0-9]+$");
         boolean isInteger = integer.matcher(value).matches();
         boolean isDecimal = decimal.matcher(value).matches();
         return isInteger || isDecimal;

@@ -64,8 +64,6 @@ public abstract  class AbstractProvider implements Provider{
         return send(req,request);
     }
 
-
-
     protected abstract Observable send(byte[] stringRequest, Request request);
 
     protected synchronized int getARequestNumber() {
