@@ -1,11 +1,15 @@
 package ethereumjava;
 
+import ethereumjava.module.objects.Block;
+import ethereumjava.module.objects.Hash;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import ethereumjava.module.objects.NodeInfo;
 import ethereumjava.net.provider.RpcProvider;
+
+import java.math.BigInteger;
 
 /**
  * Created by gunicolas on 18/08/16.
@@ -26,6 +30,9 @@ public class EthereumJavaTest {
     public void test() throws Exception{
         NodeInfo nodeInfo = ethereumJava.admin.nodeInfo();
         System.out.println(nodeInfo.toString());
+
+        Block<Hash> block = ethereumJava.eth.block(BigInteger.ZERO, Hash.class);
+        System.out.println(block.toString());
     }
 
     @After

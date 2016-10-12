@@ -43,7 +43,6 @@ public class RpcProvider extends AbstractProvider {
             this.connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             this.connection.setRequestProperty("Accept", "application/json");
 
-            this.outputStream = this.connection.getOutputStream();
         }catch(Exception e){
             throw new EthereumJavaException(e);
         }
@@ -57,6 +56,8 @@ public class RpcProvider extends AbstractProvider {
     @Override
     protected Observable send(byte[] stringRequest, final Request request) {
         try {
+            this.connection.connect();
+            outputStream = this.connection.getOutputStream();
             outputStream.write(stringRequest);
             outputStream.flush();
             inputStream = this.connection.getInputStream();
