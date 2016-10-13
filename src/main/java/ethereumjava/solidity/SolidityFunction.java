@@ -46,12 +46,10 @@ public class SolidityFunction<T extends SType> {
     }
 
     private T decodeResponse(String dataHex){
-        //TODO use decoder;
 
         if( dataHex.startsWith("0x") ){
             dataHex = dataHex.substring(2);
         }
-
 
 
 
