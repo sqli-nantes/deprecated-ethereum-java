@@ -44,8 +44,7 @@ public interface  Eth {
     @EthereumMethod(name="sendTransaction")
     Observable<Hash> sendTransactionAsync(TransactionRequest request);
 
-    String call(TransactionRequest request);
-    String getCall(TransactionRequest request);
+    String call(TransactionRequest request,String callOnBlock);
 
 
 

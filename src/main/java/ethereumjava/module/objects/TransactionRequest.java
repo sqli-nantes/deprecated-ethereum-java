@@ -3,7 +3,11 @@ package ethereumjava.module.objects;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import ethereumjava.solidity.SolidityUtils;
+import org.json.JSONObject;
 
 /**
  * Created by gunicolas on 30/08/16.
@@ -17,6 +21,10 @@ public class TransactionRequest {
     String valueHex;
     String dataHex;
 
+    public TransactionRequest(String to) {
+        this(null,to,null,null,null);
+    }
+
     public TransactionRequest(String fromHex, String toHex) {
         this(fromHex, toHex,null,null);
     }
@@ -28,7 +36,8 @@ public class TransactionRequest {
     public TransactionRequest(String from, String to, BigInteger gas, String value, String data) throws IllegalArgumentException {
         this.fromHex = SolidityUtils.toHex(from);
         this.toHex = SolidityUtils.toHex(to);
-        this.gasHex = SolidityUtils.toHex(new BigDecimal(gas));
+        if( gas == null ) this.gasHex = null;
+        else this.gasHex = SolidityUtils.toHex(new BigDecimal(gas));
         this.valueHex = SolidityUtils.toHex(value);
         this.dataHex = SolidityUtils.toHex(data);
     }
@@ -47,16 +56,16 @@ public class TransactionRequest {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        if( fromHex != null ) sb.append("\"from\":\"").append(fromHex).append('\"');
-        if( toHex != null ) sb.append(",\"to\":\"").append(toHex).append('\"');
-        if( gasHex != null ) sb.append(",\"gas\":\"").append(gasHex).append('\"');
-        if( valueHex != null ) sb.append(",\"value\":\"").append(valueHex).append('\"');
-        if( dataHex != null ) sb.append(",\"data\":\"").append(dataHex).append('\"');
-        sb.append('}');
 
-        return sb.toString();
+        JSONObject jsonObject = new JSONObject();
+
+        if( fromHex != null ) jsonObject.put("from",fromHex);
+        if( toHex != null ) jsonObject.put("to",toHex);
+        if( gasHex != null ) jsonObject.put("gas",gasHex);
+        if( valueHex != null ) jsonObject.put("value",valueHex);
+        if( dataHex != null ) jsonObject.put("data",dataHex);
+
+        return jsonObject.toString();
 
     }
 }

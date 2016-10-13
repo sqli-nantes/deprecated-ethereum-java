@@ -97,4 +97,5 @@ public abstract class SUInt<T> extends SType<T> {
     public String asString() {
         return value.toString();
     }
+
 }
