@@ -12,4 +12,4 @@ notifications:
       on_success: change
       on_failure: always
       rooms:
-        - sqlinantes:ZvBQacDCX5Q116NmXbeZYGZU#team-blockchain
+        - sqlinantes:8Usex84M6JTsUhBEymvhpm5w#team-blockchain
