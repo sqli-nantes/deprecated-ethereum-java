@@ -41,4 +41,12 @@ public abstract class SCoder {
         return encodedParameters;
     }
 
+
+    public static T decodeParam(String s){
+
+
+
+
+    }
+
 }
