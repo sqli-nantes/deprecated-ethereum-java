@@ -4,6 +4,7 @@ import ethereumjava.module.objects.Block;
 import ethereumjava.module.objects.Hash;
 import ethereumjava.module.objects.NodeInfo;
 import ethereumjava.solidity.ContractType;
+import ethereumjava.solidity.SolidityEvent;
 import ethereumjava.solidity.SolidityFunction;
 import ethereumjava.solidity.types.SType;
 import ethereumjava.solidity.types.SUInt;
@@ -33,12 +34,26 @@ public class RPCProviderTest extends EthereumJavaTest {
 
 
     interface ChoupetteContract extends ContractType {
-        SolidityFunction<SVoid> RentMe();
-        SolidityFunction<SVoid> StopRent();
-        SolidityFunction<SVoid> StartRent();
-        SolidityFunction<SVoid> ValidateTravel();
-        SolidityFunction<SVoid> GoTo(SUInt.SUInt256 x, SUInt.SUInt256 y);
-        SolidityFunction<SUInt.SUInt256> GetPrice();
+
+        SolidityEvent OnStateChanged();
+
+        @SolidityFunction.ReturnType(clazz = SVoid.class)
+        SolidityFunction RentMe();
+
+        @SolidityFunction.ReturnType(clazz = SVoid.class)
+        SolidityFunction StopRent();
+
+        @SolidityFunction.ReturnType(clazz = SVoid.class)
+        SolidityFunction StartRent();
+
+        @SolidityFunction.ReturnType(clazz = SVoid.class)
+        SolidityFunction ValidateTravel();
+
+        @SolidityFunction.ReturnType(clazz = SVoid.class)
+        SolidityFunction GoTo(SUInt.SUInt256 x, SUInt.SUInt256 y);
+
+        @SolidityFunction.ReturnType(clazz = SUInt.SUInt256.class)
+        SolidityFunction GetPrice();
     }
 
 
@@ -100,11 +115,15 @@ public class RPCProviderTest extends EthereumJavaTest {
 
         ChoupetteContract choupetteContract = (ChoupetteContract) ethereumJava.contract.withAbi(ChoupetteContract.class).at(CONTRACT_ADDRESS);
 
-        SUInt.SUInt256 response = choupetteContract
-                .GetPrice()
-                .call();
+        SUInt.SUInt256 response = (SUInt.SUInt256) choupetteContract.GetPrice().call();
 
-        assertEquals(BigInteger.ZERO,response.get());
+        assertEquals(new BigInteger("1000000"),response.get());
+
+    }
+
+    @Test
+    public void test() throws Exception{
+
 
     }
 

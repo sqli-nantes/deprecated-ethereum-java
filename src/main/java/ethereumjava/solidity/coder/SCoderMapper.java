@@ -3,7 +3,9 @@ package ethereumjava.solidity.coder;
 import java.util.HashMap;
 import java.util.Map;
 
+import ethereumjava.solidity.coder.decoder.SUIntDecoder;
 import ethereumjava.solidity.types.SBytes;
+import ethereumjava.solidity.types.SType;
 import ethereumjava.solidity.types.SUInt;
 import ethereumjava.solidity.coder.encoder.SBytesEncoder;
 import ethereumjava.solidity.coder.encoder.SUIntEncoder;
@@ -28,6 +30,7 @@ public abstract class SCoderMapper {
 
     private static final Map<Class,Class<? extends SDecoder>> decoderMapping = new HashMap<Class,Class<? extends SDecoder>>(){{
         put(SInt.class,SIntDecoder.class);
+        put(SUInt.class, SUIntDecoder.class);
     }};
 
 
@@ -50,7 +53,7 @@ public abstract class SCoderMapper {
      * @param clazz the class looking for an decoder
      * @return a decoder for the given class
      */
-    public static Class<? extends SDecoder> getDecoderForClass(Class clazz){
+    public static  Class<? extends SDecoder> getDecoderForClass(Class clazz){
         if( clazz == null ) return null;
         Class<? extends SDecoder> ret = decoderMapping.get(clazz);
         if (ret != null) return ret;
