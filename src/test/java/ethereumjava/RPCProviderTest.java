@@ -3,17 +3,17 @@ package ethereumjava;
 import ethereumjava.module.objects.Block;
 import ethereumjava.module.objects.Hash;
 import ethereumjava.module.objects.NodeInfo;
-import ethereumjava.net.provider.RpcProvider;
 import ethereumjava.solidity.ContractType;
 import ethereumjava.solidity.SolidityFunction;
+import ethereumjava.solidity.types.SType;
 import ethereumjava.solidity.types.SUInt;
 import ethereumjava.solidity.types.SVoid;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigInteger;
+import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -32,12 +32,13 @@ public class RPCProviderTest extends EthereumJavaTest {
     }
 
 
-    interface Contract extends ContractType {
+    interface ChoupetteContract extends ContractType {
         SolidityFunction<SVoid> RentMe();
         SolidityFunction<SVoid> StopRent();
         SolidityFunction<SVoid> StartRent();
         SolidityFunction<SVoid> ValidateTravel();
         SolidityFunction<SVoid> GoTo(SUInt.SUInt256 x, SUInt.SUInt256 y);
+        SolidityFunction<SUInt.SUInt256> GetPrice();
     }
 
 
@@ -47,8 +48,8 @@ public class RPCProviderTest extends EthereumJavaTest {
     @Test
     public void testContractRentMe() throws Exception{
 
-        Contract contract = (Contract) ethereumJava.contract.withAbi(Contract.class).at(CONTRACT_ADDRESS);
-        Hash txHash = contract.RentMe().sendTransaction(ACCOUNT, new BigInteger("90000"));
+        ChoupetteContract choupetteContract = (ChoupetteContract) ethereumJava.contract.withAbi(ChoupetteContract.class).at(CONTRACT_ADDRESS);
+        Hash txHash = choupetteContract.RentMe().sendTransaction(ACCOUNT, new BigInteger("90000"));
 
         assertTrue(txHash!=null);
     }
@@ -56,8 +57,8 @@ public class RPCProviderTest extends EthereumJavaTest {
     @Test
     public void testContractStopRent() throws Exception{
 
-        Contract contract = (Contract) ethereumJava.contract.withAbi(Contract.class).at(CONTRACT_ADDRESS);
-        Hash txHash = contract.StopRent().sendTransaction(ACCOUNT, new BigInteger("90000"));
+        ChoupetteContract choupetteContract = (ChoupetteContract) ethereumJava.contract.withAbi(ChoupetteContract.class).at(CONTRACT_ADDRESS);
+        Hash txHash = choupetteContract.StopRent().sendTransaction(ACCOUNT, new BigInteger("90000"));
 
         assertTrue(txHash!=null);
     }
@@ -65,8 +66,8 @@ public class RPCProviderTest extends EthereumJavaTest {
     @Test
     public void testContractStartRent() throws Exception{
 
-        Contract contract = (Contract) ethereumJava.contract.withAbi(Contract.class).at(CONTRACT_ADDRESS);
-        Hash txHash = contract.StartRent().sendTransaction(ACCOUNT, new BigInteger("90000"));
+        ChoupetteContract choupetteContract = (ChoupetteContract) ethereumJava.contract.withAbi(ChoupetteContract.class).at(CONTRACT_ADDRESS);
+        Hash txHash = choupetteContract.StartRent().sendTransaction(ACCOUNT, new BigInteger("90000"));
 
         assertTrue(txHash!=null);
     }
@@ -74,8 +75,8 @@ public class RPCProviderTest extends EthereumJavaTest {
     @Test
     public void testContractValidateTravel() throws Exception{
 
-        Contract contract = (Contract) ethereumJava.contract.withAbi(Contract.class).at(CONTRACT_ADDRESS);
-        Hash txHash = contract.ValidateTravel().sendTransaction(ACCOUNT, new BigInteger("90000"));
+        ChoupetteContract choupetteContract = (ChoupetteContract) ethereumJava.contract.withAbi(ChoupetteContract.class).at(CONTRACT_ADDRESS);
+        Hash txHash = choupetteContract.ValidateTravel().sendTransaction(ACCOUNT, new BigInteger("90000"));
 
         assertTrue(txHash!=null);
 
@@ -84,13 +85,26 @@ public class RPCProviderTest extends EthereumJavaTest {
     @Test
     public void testContractGoTo() throws Exception{
 
-        Contract contract = (Contract) ethereumJava.contract.withAbi(Contract.class).at(CONTRACT_ADDRESS);
-        Hash txHash = contract
+        ChoupetteContract choupetteContract = (ChoupetteContract) ethereumJava.contract.withAbi(ChoupetteContract.class).at(CONTRACT_ADDRESS);
+        Hash txHash = choupetteContract
                 .GoTo(  SUInt.fromBigInteger256(BigInteger.valueOf(3)),
                         SUInt.fromBigInteger256(BigInteger.valueOf(2)))
                 .sendTransaction(ACCOUNT, new BigInteger("90000"));
 
         assertTrue(txHash!=null);
+
+    }
+
+    @Test
+    public void testContractGetPrice() throws Exception{
+
+        ChoupetteContract choupetteContract = (ChoupetteContract) ethereumJava.contract.withAbi(ChoupetteContract.class).at(CONTRACT_ADDRESS);
+
+        SUInt.SUInt256 response = choupetteContract
+                .GetPrice()
+                .call();
+
+        assertEquals(BigInteger.ZERO,response.get());
 
     }
 

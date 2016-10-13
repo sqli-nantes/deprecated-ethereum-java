@@ -45,7 +45,7 @@ public class SolidityFunction<T extends SType> {
         return "0x"+this.signature()+ encodedParameters;
     }
 
-    private List<T> decodeResponse(String dataHex){
+    private T decodeResponse(String dataHex){
         //TODO use decoder;
         return null;
     }
@@ -64,8 +64,14 @@ public class SolidityFunction<T extends SType> {
         return eth.sendTransaction(formatRequest(from,gas));
     }
 
-    public List<T> call(String from, BigInteger gas){
-        String encodedResponse = eth.call(formatRequest(from,gas));
+    public T call(){
+
+        String payload = toPayload();
+        TransactionRequest request = new TransactionRequest(address);
+        request.setDataHex(payload);
+
+        String encodedResponse = eth.call(request,"latest");
+
         return decodeResponse(encodedResponse);
     }
 
