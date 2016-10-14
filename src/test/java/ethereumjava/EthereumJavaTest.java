@@ -10,13 +10,18 @@ import org.junit.Before;
 public class EthereumJavaTest {
 
     EthereumJava ethereumJava;
-    RpcProvider provider;
+
+
+    final String ACCOUNT = "0x3cd85ae0ffdf3d88c40fdce3654181665097939f";
+    final String PASSWORD = "toto";
 
     @Before
     public void setup() throws Exception{
         ethereumJava = new EthereumJava.Builder()
                 .provider(new RpcProvider("http://localhost:8547"))
                 .build();
+
+        ethereumJava.personal.unlockAccount(ACCOUNT,PASSWORD,3600);
     }
 
     @After

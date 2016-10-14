@@ -11,7 +11,6 @@ import ethereumjava.exception.EthereumJavaException;
 import ethereumjava.module.Eth;
 import ethereumjava.module.objects.Hash;
 import ethereumjava.module.objects.TransactionRequest;
-import ethereumjava.sha3.Sha3;
 import ethereumjava.solidity.coder.SCoder;
 import ethereumjava.solidity.coder.SCoderMapper;
 import ethereumjava.solidity.coder.decoder.SDecoder;
@@ -21,34 +20,31 @@ import ethereumjava.solidity.types.SType;
  * Created by gunicolas on 4/08/16.
  */
 
-public class SolidityFunction<T extends SType> {
+public class SolidityFunction<T extends SType> extends SolidityElement{
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface ReturnType{
-        Class clazz();
+        Class value();
     }
 
-    Method method;
-    Eth eth;
-    String address;
     Object[] args;
-    String fullName;
-
     Class<T> returnType;
 
-    public SolidityFunction(Method method, Object[] args,Eth eth, String address) {
-        this.method = method;
-        this.eth = eth;
-        this.address = address;
+    public SolidityFunction(String address,Method method,Eth eth, Object[] args) {
+        super(address,method,eth);
         this.args = args;
-        this.fullName = SolidityUtils.transformToFullName(method);
-        this.returnType = method.getAnnotation(ReturnType.class).clazz();
-        this.returnType.getGenericSuperclass();
+        this.returnType = method.getAnnotation(ReturnType.class).value();
     }
 
-    private String signature(){
-        return Sha3.hash(this.fullName).substring(0,8);
+    @Override
+    protected Class[] getParametersTypes() {
+        return method.getParameterTypes();
+    }
+
+    @Override
+    protected String signature(){
+        return super.signature().substring(0,8);
     }
 
     private String encode(){

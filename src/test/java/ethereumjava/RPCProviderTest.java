@@ -6,13 +6,13 @@ import ethereumjava.module.objects.NodeInfo;
 import ethereumjava.solidity.ContractType;
 import ethereumjava.solidity.SolidityEvent;
 import ethereumjava.solidity.SolidityFunction;
-import ethereumjava.solidity.types.SType;
 import ethereumjava.solidity.types.SUInt;
 import ethereumjava.solidity.types.SVoid;
 import org.junit.Test;
+import rx.Observable;
+import rx.Subscriber;
 
 import java.math.BigInteger;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -35,30 +35,34 @@ public class RPCProviderTest extends EthereumJavaTest {
 
     interface ChoupetteContract extends ContractType {
 
+
+        @SolidityEvent.Anonymous(value = false)
+        @SolidityEvent.Parameters(value = {
+            @SolidityEvent.Parameter(indexed = false, name = "state", type = SUInt.SUInt256.class)
+        })
         SolidityEvent OnStateChanged();
 
-        @SolidityFunction.ReturnType(clazz = SVoid.class)
+        @SolidityFunction.ReturnType(value = SVoid.class)
         SolidityFunction RentMe();
 
-        @SolidityFunction.ReturnType(clazz = SVoid.class)
+        @SolidityFunction.ReturnType(value = SVoid.class)
         SolidityFunction StopRent();
 
-        @SolidityFunction.ReturnType(clazz = SVoid.class)
+        @SolidityFunction.ReturnType(value = SVoid.class)
         SolidityFunction StartRent();
 
-        @SolidityFunction.ReturnType(clazz = SVoid.class)
+        @SolidityFunction.ReturnType(value = SVoid.class)
         SolidityFunction ValidateTravel();
 
-        @SolidityFunction.ReturnType(clazz = SVoid.class)
+        @SolidityFunction.ReturnType(value = SVoid.class)
         SolidityFunction GoTo(SUInt.SUInt256 x, SUInt.SUInt256 y);
 
-        @SolidityFunction.ReturnType(clazz = SUInt.SUInt256.class)
+        @SolidityFunction.ReturnType(value = SUInt.SUInt256.class)
         SolidityFunction GetPrice();
     }
 
 
     final String CONTRACT_ADDRESS = "0x4f81d84cccd66f12836625281ae249f8b0586920";
-    final String ACCOUNT = "0x3cd85ae0ffdf3d88c40fdce3654181665097939f";
 
     @Test
     public void testContractRentMe() throws Exception{
@@ -122,7 +126,32 @@ public class RPCProviderTest extends EthereumJavaTest {
     }
 
     @Test
-    public void test() throws Exception{
+    public void testContractOnStateChanged() throws Exception{
+
+        ChoupetteContract choupetteContract = (ChoupetteContract) ethereumJava.contract.withAbi(ChoupetteContract.class).at(CONTRACT_ADDRESS);
+
+        Observable obs = choupetteContract.OnStateChanged().watch();
+        obs.subscribe(new Subscriber() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Object o) {
+
+            }
+        });
+
+
+
+
+
 
 
     }

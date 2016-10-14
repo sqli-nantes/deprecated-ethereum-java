@@ -127,19 +127,6 @@ public abstract class SolidityUtils {
         return "0x"+sb.toString();
     }
 
-    public static String transformToFullName(Method method) throws JSONException {
-        StringBuilder sbStr = new StringBuilder();
-        int i=0;
-        Class[] parameters = method.getParameterTypes();
-        for (Class c : parameters) {
-            sbStr.append(c.getSimpleName().substring(1).toLowerCase());
-            if( i < parameters.length-1 ){
-                sbStr.append(",");
-            }
-            i++;
-        }
-        return method.getName() + '(' + sbStr.toString() + ')';
-    }
     public static String extractDisplayName(String name){
         int index = name.indexOf('(');
         if( index != -1 ) return name.substring(0,index);
