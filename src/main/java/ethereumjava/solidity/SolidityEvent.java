@@ -1,6 +1,8 @@
 package ethereumjava.solidity;
 
 import ethereumjava.module.Eth;
+import ethereumjava.module.objects.Filter;
+import ethereumjava.module.objects.FilterOptions;
 import ethereumjava.solidity.types.SType;
 import rx.Observable;
 
@@ -17,16 +19,7 @@ import java.util.List;
  */
 public class SolidityEvent extends SolidityElement{
 
-
-    class SolidityEventEncoded {
-        List<String> topics;
-        String address;
-
-        public SolidityEventEncoded(List<String> topics, String address) {
-            this.topics = topics;
-            this.address = address;
-        }
-    }
+    Filter filter;
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
@@ -68,23 +61,23 @@ public class SolidityEvent extends SolidityElement{
         return ret.toArray(new Class[ret.size()]);
     }
 
-    public void encode(){
+    public FilterOptions encode(){
 
         List<String> topics = new ArrayList<>();
         topics.add("0x"+this.signature());
 
-        //new SolidityEventEncoded(,this.address);
+        return new FilterOptions(topics,this.address);
     }
-
 
     public Observable watch(){
 
-        encode();
-
-
-
-
-
-        return null;
+        FilterOptions options = encode();
+        this.filter  = new Filter(options,eth);
+        return filter.watch();
     }
+
+    public Observable stopWatching(){
+        return this.filter.stopWatching();
+    }
+
 }

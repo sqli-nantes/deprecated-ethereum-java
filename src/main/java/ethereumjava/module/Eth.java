@@ -3,17 +3,12 @@ package ethereumjava.module;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import ethereumjava.module.objects.*;
 import ethereumjava.solidity.SolidityUtils;
 import rx.Observable;
 import ethereumjava.module.annotation.ConvertParam;
 import ethereumjava.module.annotation.EthereumMethod;
 import ethereumjava.module.converter.GetBlockClassConverter;
-import ethereumjava.module.objects.Block;
-import ethereumjava.module.objects.Hash;
-import ethereumjava.module.objects.Transaction;
-import ethereumjava.module.objects.TransactionReceipt;
-import ethereumjava.module.objects.TransactionRequest;
-import ethereumjava.module.objects.TransactionFormat;
 
 /**
  * Created by gunicolas on 23/08/16.
@@ -46,6 +41,15 @@ public interface  Eth {
 
     String call(TransactionRequest request,String callOnBlock);
 
+    Observable<String> newFilter(FilterOptions options);
+
+    @EthereumMethod(name="getFilterLogs")
+    Observable<Log[]> getFilterLogs(String filterId);
+
+    @EthereumMethod(name="getFilterChanges")
+    Observable<Log[]> getFilterChanges(String filterId);
+
+    Observable uninstallFilter(String filterId);
 
 
 

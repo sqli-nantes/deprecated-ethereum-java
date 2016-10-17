@@ -36,28 +36,28 @@ public class RPCProviderTest extends EthereumJavaTest {
     interface ChoupetteContract extends ContractType {
 
 
-        @SolidityEvent.Anonymous(value = false)
-        @SolidityEvent.Parameters(value = {
+        @SolidityEvent.Anonymous(false)
+        @SolidityEvent.Parameters({
             @SolidityEvent.Parameter(indexed = false, name = "state", type = SUInt.SUInt256.class)
         })
         SolidityEvent OnStateChanged();
 
-        @SolidityFunction.ReturnType(value = SVoid.class)
+        @SolidityFunction.ReturnType(SVoid.class)
         SolidityFunction RentMe();
 
-        @SolidityFunction.ReturnType(value = SVoid.class)
+        @SolidityFunction.ReturnType(SVoid.class)
         SolidityFunction StopRent();
 
-        @SolidityFunction.ReturnType(value = SVoid.class)
+        @SolidityFunction.ReturnType(SVoid.class)
         SolidityFunction StartRent();
 
-        @SolidityFunction.ReturnType(value = SVoid.class)
+        @SolidityFunction.ReturnType(SVoid.class)
         SolidityFunction ValidateTravel();
 
-        @SolidityFunction.ReturnType(value = SVoid.class)
+        @SolidityFunction.ReturnType(SVoid.class)
         SolidityFunction GoTo(SUInt.SUInt256 x, SUInt.SUInt256 y);
 
-        @SolidityFunction.ReturnType(value = SUInt.SUInt256.class)
+        @SolidityFunction.ReturnType(SUInt.SUInt256.class)
         SolidityFunction GetPrice();
     }
 
@@ -125,32 +125,32 @@ public class RPCProviderTest extends EthereumJavaTest {
 
     }
 
-    @Test
+    @Test(timeout = 10000)
     public void testContractOnStateChanged() throws Exception{
 
-        ChoupetteContract choupetteContract = (ChoupetteContract) ethereumJava.contract.withAbi(ChoupetteContract.class).at(CONTRACT_ADDRESS);
 
+        final boolean[] toBeContinued = {false};
+
+        ChoupetteContract choupetteContract = (ChoupetteContract) ethereumJava.contract.withAbi(ChoupetteContract.class).at(CONTRACT_ADDRESS);
         Observable obs = choupetteContract.OnStateChanged().watch();
         obs.subscribe(new Subscriber() {
             @Override
             public void onCompleted() {
-
+                System.out.println("on completed");
             }
 
             @Override
             public void onError(Throwable e) {
-
+                System.out.println(e.getMessage());
             }
 
             @Override
             public void onNext(Object o) {
 
+                System.out.println(o.toString());
+
             }
         });
-
-
-
-
 
 
 

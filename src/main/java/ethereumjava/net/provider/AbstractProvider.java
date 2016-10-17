@@ -47,6 +47,9 @@ public abstract  class AbstractProvider implements Provider{
         gson = gsonBuilder.create();
     }
 
+
+
+
     @Override
     public Observable sendRequest(final Request request) throws EthereumJavaException {
 

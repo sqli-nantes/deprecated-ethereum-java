@@ -57,7 +57,6 @@ public class RpcProvider extends AbstractProvider {
 			this.connection.setRequestProperty("Accept", "application/json");
 			this.connection.connect();
 
-
 			outputStream = this.connection.getOutputStream();
 			outputStream.write(stringRequest);
 			outputStream.flush();
