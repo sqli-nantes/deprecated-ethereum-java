@@ -1,6 +1,7 @@
 package ethereumjava.module.objects;
 
 import ethereumjava.module.Eth;
+import ethereumjava.solidity.coder.decoder.SDecoder;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -10,11 +11,11 @@ import java.util.List;
 /**
  * Created by gunicolas on 13/10/16.
  */
-public class Filter {
+public class Filter<T> {
 
     static final int POLLING_TIMEOUT = 1000/2;
 
-    List<Subscriber> filterCallbacks;
+    List<Subscriber<? super T>> filterCallbacks;
     List<Subscriber> logsCallbacks;
     String filterId;
 
@@ -22,11 +23,14 @@ public class Filter {
 
     Thread pollingThread;
 
-    public Filter(FilterOptions options,Eth eth) {
+    Class<? extends SDecoder<T>> returnDecoder;
+
+    public Filter(FilterOptions options, Eth eth, Class<? extends SDecoder<T>> returnDecoder) {
 
         this.filterCallbacks = new ArrayList<>();
         this.logsCallbacks = new ArrayList<>();
         this.eth = eth;
+        this.returnDecoder = returnDecoder;
 
         final Observable<String> callback =  eth.newFilter(options);
         callback.subscribe(new Subscriber<String>() {
@@ -92,7 +96,7 @@ public class Filter {
 
             @Override
             public void onCompleted() {
-
+                System.out.println("getLogsAtStart onCompleted");
             }
 
             @Override
@@ -117,35 +121,52 @@ public class Filter {
             @Override
             public void run() {
 
-                while(true){
+            while(true){
 
-                    Observable<Log[]> changesObservable = eth.getFilterChanges(filterId);
+                Observable<Log[]> changesObservable = eth.getFilterChanges(filterId);
 
-                    changesObservable.subscribe(new Subscriber<Log[]>() {
-                        @Override
-                        public void onCompleted() {
-                            System.out.println("completed");
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            for(Subscriber subscriber : filterCallbacks )
-                                subscriber.onError(e);
-                        }
-
-                        @Override
-                        public void onNext(Log[] logs) {
-                            for(Subscriber subscriber : filterCallbacks )
-                                subscriber.onNext(logs);
-                        }
-                    });
-
-                    try {
-                        Thread.sleep(POLLING_TIMEOUT);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                changesObservable.subscribe(new Subscriber<Log[]>() {
+                    @Override
+                    public void onCompleted() {
                     }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        for(Subscriber subscriber : filterCallbacks )
+                            subscriber.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(Log[] logs) {
+
+                        if( logs == null ){
+                            onCompleted();
+                            return;
+                        }
+
+                        for(Log log : logs){
+
+                            try {
+                                T data = null;
+                                if( returnDecoder != null ) //TODO return log if no return parameter
+                                    data =  returnDecoder.newInstance().decode(log.data);
+
+                                for(Subscriber<? super T> subscriber : filterCallbacks )
+                                    subscriber.onNext(data);
+
+                            } catch (Exception e) {
+                                onError(e);
+                            }
+                        }
+                    }
+                });
+
+                try {
+                    Thread.sleep(POLLING_TIMEOUT);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+            }
 
             }
         });
@@ -154,12 +175,11 @@ public class Filter {
 
     }
 
+    public Observable<T> watch(){
 
-    public Observable watch(){
-
-        Observable observable = Observable.create(new Observable.OnSubscribe<Object>(){
+        Observable<T> observable = Observable.create(new Observable.OnSubscribe<T>(){
             @Override
-            public void call(Subscriber<? super Object> subscriber) {
+            public void call(Subscriber<? super T> subscriber) {
                 filterCallbacks.add(subscriber);
 
                 if( filterId != null ){

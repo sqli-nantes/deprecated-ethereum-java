@@ -7,7 +7,7 @@ import org.junit.Before;
 /**
  * Created by gunicolas on 12/10/16.
  */
-public class EthereumJavaTest {
+public class EthereumRPCJavaTest {
 
     EthereumJava ethereumJava;
 

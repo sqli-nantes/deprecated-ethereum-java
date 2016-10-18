@@ -8,6 +8,8 @@ import java.util.List;
  * Created by gunicolas on 14/10/16.
  */
 public class FilterOptions{
+
+
     List<String> topics;
     String address;
 

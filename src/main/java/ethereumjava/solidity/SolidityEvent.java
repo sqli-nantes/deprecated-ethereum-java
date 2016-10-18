@@ -3,6 +3,8 @@ package ethereumjava.solidity;
 import ethereumjava.module.Eth;
 import ethereumjava.module.objects.Filter;
 import ethereumjava.module.objects.FilterOptions;
+import ethereumjava.solidity.coder.SCoderMapper;
+import ethereumjava.solidity.coder.decoder.SDecoder;
 import ethereumjava.solidity.types.SType;
 import rx.Observable;
 
@@ -17,7 +19,7 @@ import java.util.List;
 /**
  * Created by gunicolas on 4/08/16.
  */
-public class SolidityEvent extends SolidityElement{
+public class SolidityEvent<T> extends SolidityElement{
 
     Filter filter;
 
@@ -69,10 +71,16 @@ public class SolidityEvent extends SolidityElement{
         return new FilterOptions(topics,this.address);
     }
 
-    public Observable watch(){
+    public Observable<T> watch(){
+
+        Class[] returnParams = getParametersTypes();
+        Class<? extends SDecoder> decoder = null;
+        if( returnParams.length > 0 ) {
+            decoder = SCoderMapper.getDecoderForClass(returnParams[0]);
+        }
 
         FilterOptions options = encode();
-        this.filter  = new Filter(options,eth);
+        this.filter  = new Filter(options,eth,decoder);
         return filter.watch();
     }
 

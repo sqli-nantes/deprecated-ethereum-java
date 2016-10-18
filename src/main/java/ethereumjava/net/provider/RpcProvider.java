@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by gunicolas on 18/08/16.
@@ -43,6 +44,7 @@ public class RpcProvider extends AbstractProvider {
 
 	@Override
 	protected Observable send(byte[] stringRequest, final Request request) {
+
 		try {
 			URLConnection urlConn = url.openConnection();
 			this.connection = (HttpURLConnection) urlConn;
@@ -90,7 +92,7 @@ public class RpcProvider extends AbstractProvider {
 
 		} catch (IOException e) {
 			throw new EthereumJavaException(e);
-		}finally {
+		} finally {
 			this.connection.disconnect();
 			try {
 				outputStream.close();
