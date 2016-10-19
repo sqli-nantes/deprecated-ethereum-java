@@ -18,12 +18,16 @@ public class FilterOptions{
         this.address = address;
     }
 
+
+
     @Override
     public String toString() {
 
+        //TODO move code to "serialise" function
+
         JSONObject jsonObject = new JSONObject();
 
-        if( topics != null ) jsonObject.put("topics",topics.toString());
+        if( topics != null ) jsonObject.put("topics",topics);
         if( address != null ) jsonObject.put("address",address);
 
         return jsonObject.toString();

@@ -1,5 +1,6 @@
 package ethereumjava.solidity;
 
+import ethereumjava.exception.EthereumJavaException;
 import ethereumjava.module.objects.Hash;
 import ethereumjava.net.provider.RpcProvider;
 import ethereumjava.solidity.types.SUInt;
@@ -35,7 +36,9 @@ public class ContractTest {
     EthereumJava ethereumJava;
 
 
-    final String ACCOUNT = "0x3cd85ae0ffdf3d88c40fdce3654181665097939f";
+    final String ACCOUNT = "0xccb8af9d259115163400362c4dfc5f4a0c1e5109";
+    final String CONTRACT_ADDRESS = "0x8571f5f9df8623ad1e702f6e41bb4dd1d21b8a41";
+
     final String PASSWORD = "toto";
 
     ChoupetteContract choupetteContract;
@@ -50,11 +53,11 @@ public class ContractTest {
         choupetteContract = (ChoupetteContract) ethereumJava.contract.withAbi(ChoupetteContract.class).at(CONTRACT_ADDRESS);
     }
 
+
     @After
     public void after() throws Exception{
         ethereumJava.close();
     }
-
 
     interface ChoupetteContract extends ContractType {
 
@@ -78,13 +81,11 @@ public class ContractTest {
 
         @SolidityFunction.ReturnType(SVoid.class)
         SolidityFunction GoTo(SUInt.SUInt256 x, SUInt.SUInt256 y);
-
         @SolidityFunction.ReturnType(SUInt.SUInt256.class)
         SolidityFunction GetPrice();
+
+
     }
-
-
-    final String CONTRACT_ADDRESS = "0x4f81d84cccd66f12836625281ae249f8b0586920";
 
     @Test
     public void testContractRentMe() throws Exception{
@@ -136,7 +137,7 @@ public class ContractTest {
 
         SUInt.SUInt256 response = (SUInt.SUInt256) choupetteContract.GetPrice().call();
 
-        assertEquals(new BigInteger("1000000"),response.get());
+        assertEquals(new BigInteger("0"),response.get());
 
     }
 
@@ -146,24 +147,25 @@ public class ContractTest {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final SolidityEvent event = choupetteContract.OnStateChanged();
-                Observable<SUInt.SUInt256> obs = event.watch();
-                obs.subscribe(new Subscriber<SUInt.SUInt256>() {
-                    @Override
-                    public void onCompleted() {
-                        System.out.println("end of filter");
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        System.out.println(e.getMessage());
-                    }
+            final SolidityEvent event = choupetteContract.OnStateChanged();
+            Observable<SUInt.SUInt256> obs = event.watch();
+            obs.subscribe(new Subscriber<SUInt.SUInt256>() {
+                @Override
+                public void onCompleted() {
+                    System.out.println("end of filter");
+                }
 
-                    @Override
-                    public void onNext(SUInt.SUInt256 ret) {
-                        System.out.println("state : "+ret.asString());
-                    }
-                });
+                @Override
+                public void onError(Throwable e) {
+                    System.out.println(e.getMessage());
+                }
+
+                @Override
+                public void onNext(SUInt.SUInt256 ret) {
+                    System.out.println("state : " + ret.asString());
+                }
+            });
 
             }
         }).start();
@@ -189,9 +191,8 @@ public class ContractTest {
 
     }
 
-
-    @Test
     public void testChoupetteScenario() throws Exception{
+
 
 
 
