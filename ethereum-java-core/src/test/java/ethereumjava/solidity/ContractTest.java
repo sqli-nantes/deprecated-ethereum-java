@@ -1,28 +1,17 @@
 package ethereumjava.solidity;
 
-import ethereumjava.exception.EthereumJavaException;
+import ethereumjava.EthereumJava;
 import ethereumjava.module.objects.Hash;
 import ethereumjava.net.provider.RpcProvider;
 import ethereumjava.solidity.types.SUInt;
 import ethereumjava.solidity.types.SVoid;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-
-import java.math.BigInteger;
-
-import ethereumjava.EthereumJava;
-import ethereumjava.net.Request;
-import ethereumjava.net.provider.Provider;
-import ethereumjava.solidity.types.SInt;
 import rx.Observable;
 import rx.Subscriber;
+
+import java.math.BigInteger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -186,15 +175,6 @@ public class ContractTest {
         synchronized (this){
             this.wait();
         }
-
-
-
-    }
-
-    public void testChoupetteScenario() throws Exception{
-
-
-
 
 
 
