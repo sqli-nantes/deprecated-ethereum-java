@@ -1,0 +1,6 @@
+rootProject.name = 'ethereum-java'
+
+
+include 'ethereum-java-core'
+include 'ethereum-java-sample'
+
