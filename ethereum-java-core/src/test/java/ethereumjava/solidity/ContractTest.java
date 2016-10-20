@@ -25,8 +25,8 @@ public class ContractTest {
     EthereumJava ethereumJava;
 
 
-    final String ACCOUNT = "0xccb8af9d259115163400362c4dfc5f4a0c1e5109";
-    final String CONTRACT_ADDRESS = "0x8571f5f9df8623ad1e702f6e41bb4dd1d21b8a41";
+    final String ACCOUNT = "0xc74a32dd958075a6a31db72db3fa1b7c57350d6c";
+    final String CONTRACT_ADDRESS = "0x1eeffd13b8e5a7b4d8964652fe37c60fca16e9ff";
 
     final String PASSWORD = "toto";
 
@@ -126,9 +126,11 @@ public class ContractTest {
 
         SUInt.SUInt256 response = (SUInt.SUInt256) choupetteContract.GetPrice().call();
 
-        assertEquals(new BigInteger("0"),response.get());
+        assertEquals(new BigInteger("1000000"),response.get());
 
     }
+
+    boolean wait = true;
 
     @Test
     public void testContractOnStateChanged() throws Exception{
@@ -153,6 +155,7 @@ public class ContractTest {
                 @Override
                 public void onNext(SUInt.SUInt256 ret) {
                     System.out.println("state : " + ret.asString());
+                    wait = false;
                 }
             });
 
@@ -173,10 +176,9 @@ public class ContractTest {
         }).start();
 
         synchronized (this){
-            this.wait();
+            while(wait) {
+                this.wait(100);
+            }
         }
-
-
-
     }
 }

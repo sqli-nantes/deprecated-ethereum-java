@@ -18,11 +18,6 @@ public class Main {
                 .provider(new RpcProvider(RPC_ADDRESS))
                 .build();
 
-        NodeInfo nodeInfo = ethereumJava.admin.nodeInfo();
-        System.out.println(nodeInfo.enode);
-
-
-
         System.out.println("it works");
     }
 
