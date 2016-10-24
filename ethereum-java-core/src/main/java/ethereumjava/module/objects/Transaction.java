@@ -18,7 +18,12 @@ public class Transaction extends TransactionFormat {
     public BigInteger gasPrice;
     public BigInteger gas;
     public BigInteger number;
-    public String data;
+
+    //???
+    public String input;
+    public String v;
+    public String r;
+    public String s;
 
 
 }

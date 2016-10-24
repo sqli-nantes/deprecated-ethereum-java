@@ -12,7 +12,7 @@ public class EthereumRPCJavaTest {
     EthereumJava ethereumJava;
 
 
-    final String ACCOUNT = "0x3cd85ae0ffdf3d88c40fdce3654181665097939f";
+    final String ACCOUNT = "0xc74a32dd958075a6a31db72db3fa1b7c57350d6c";
     final String PASSWORD = "toto";
 
     @Before

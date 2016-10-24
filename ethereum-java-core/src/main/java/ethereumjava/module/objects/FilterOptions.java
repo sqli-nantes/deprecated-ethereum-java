@@ -9,7 +9,6 @@ import java.util.List;
  */
 public class FilterOptions{
 
-
     List<String> topics;
     String address;
 
@@ -17,7 +16,6 @@ public class FilterOptions{
         this.topics = topics;
         this.address = address;
     }
-
 
 
     @Override

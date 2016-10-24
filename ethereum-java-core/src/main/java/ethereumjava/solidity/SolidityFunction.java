@@ -6,15 +6,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 import ethereumjava.exception.EthereumJavaException;
 import ethereumjava.module.Eth;
-import ethereumjava.module.objects.Hash;
-import ethereumjava.module.objects.TransactionRequest;
+import ethereumjava.module.objects.*;
 import ethereumjava.solidity.coder.SCoder;
 import ethereumjava.solidity.coder.SCoderMapper;
 import ethereumjava.solidity.coder.decoder.SDecoder;
 import ethereumjava.solidity.types.SType;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * Created by gunicolas on 4/08/16.
@@ -79,6 +84,69 @@ public class SolidityFunction<T extends SType> extends SolidityElement{
 
     public Hash sendTransaction(String from, BigInteger gas){
         return eth.sendTransaction(formatRequest(from,gas));
+    }
+
+
+    public Observable<Transaction> sendTransactionAndGetMined(String from, BigInteger gas){
+
+        final List<Subscriber<Transaction>> subscribers = new ArrayList<>();
+
+        final Hash txHash = sendTransaction(from, gas);
+        if( txHash == null ) return null;
+
+        BlockFilter blockFilter = new BlockFilter(eth);
+        Observable<List<String>> obs = blockFilter.watch();
+
+        obs.subscribe(new Subscriber<List<String>>() {
+            @Override
+            public void onCompleted() {
+                for (Subscriber sub : subscribers) {
+                    sub.onCompleted();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                for (Subscriber sub : subscribers) {
+                    sub.onError(e);
+                }
+            }
+
+            @Override
+            public void onNext(List<String> hashs) {
+
+                if(hashs != null && hashs.size() > 0 ) {
+                    for(String hash : hashs) {
+                        Block<Transaction> block = null;
+                        try {
+                            block = eth.block(Hash.valueOf(hash), Transaction.class);
+                        } catch (EthereumJavaException e) {
+                            onError(e);
+                            return;
+                        }
+
+                        if (block == null) return;
+
+                        for (Transaction transaction : block.transactions) {
+                            if (transaction.hash.equals(txHash)) {
+                                for (Subscriber sub : subscribers) {
+                                    sub.onNext(transaction);
+                                    sub.onCompleted();
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        return Observable.create(new Observable.OnSubscribe<Transaction>() {
+            @Override
+            public void call(Subscriber< ? super Transaction> subscriber) {
+                subscribers.add((Subscriber<Transaction>) subscriber);
+            }
+        });
     }
 
     public T call(){

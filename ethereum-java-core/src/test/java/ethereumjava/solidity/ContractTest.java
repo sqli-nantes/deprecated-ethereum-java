@@ -2,6 +2,7 @@ package ethereumjava.solidity;
 
 import ethereumjava.EthereumJava;
 import ethereumjava.module.objects.Hash;
+import ethereumjava.module.objects.Transaction;
 import ethereumjava.net.provider.RpcProvider;
 import ethereumjava.solidity.types.SUInt;
 import ethereumjava.solidity.types.SVoid;
@@ -9,7 +10,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscriber;
+import rx.observers.TestSubscriber;
+import rx.schedulers.Schedulers;
 
 import java.math.BigInteger;
 
@@ -130,55 +134,41 @@ public class ContractTest {
 
     }
 
-    boolean wait = true;
 
     @Test
     public void testContractOnStateChanged() throws Exception{
 
-        new Thread(new Runnable() {
+        Observable<Transaction> obsTransac = choupetteContract.RentMe().sendTransactionAndGetMined(ACCOUNT, new BigInteger("90000"));
+
+
+//        TestSubscriber<Transaction> testSubscriber = new TestSubscriber<>();
+//        testSubscriber.assertNoErrors();
+//        testSubscriber.assertCompleted();
+//        testSubscriber.assertValueCount(1);
+
+        obsTransac.subscribe(new Subscriber<Transaction>() {
             @Override
-            public void run() {
-
-            final SolidityEvent event = choupetteContract.OnStateChanged();
-            Observable<SUInt.SUInt256> obs = event.watch();
-            obs.subscribe(new Subscriber<SUInt.SUInt256>() {
-                @Override
-                public void onCompleted() {
-                    System.out.println("end of filter");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    System.out.println(e.getMessage());
-                }
-
-                @Override
-                public void onNext(SUInt.SUInt256 ret) {
-                    System.out.println("state : " + ret.asString());
-                    wait = false;
-                }
-            });
-
+            public void onCompleted() {
+                System.out.println("complete");
             }
-        }).start();
+
+            @Override
+            public void onError(Throwable e) {
+                System.out.println(e.getMessage());
+            }
+
+            @Override
+            public void onNext(Transaction transaction) {
+                System.out.println(transaction.toString());
+            }
+        });
 
         synchronized (this){
-            this.wait(1000);
+            wait();
         }
 
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Call RentMe()");
-                choupetteContract.RentMe().sendTransaction(ACCOUNT, new BigInteger("90000"));
-            }
-        }).start();
-
-        synchronized (this){
-            while(wait) {
-                this.wait(100);
-            }
-        }
     }
+
+
 }
