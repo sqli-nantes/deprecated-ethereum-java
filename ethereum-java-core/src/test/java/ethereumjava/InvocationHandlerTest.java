@@ -1,5 +1,6 @@
 package ethereumjava;
 
+import ethereumjava.module.objects.*;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,12 +12,10 @@ import org.mockito.junit.MockitoRule;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
-import ethereumjava.module.objects.Block;
-import ethereumjava.module.objects.Hash;
-import ethereumjava.module.objects.TransactionRequest;
 import ethereumjava.net.Request;
 import ethereumjava.net.provider.Provider;
 

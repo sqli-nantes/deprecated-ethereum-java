@@ -11,7 +11,6 @@ public class EthereumRPCJavaTest {
 
     EthereumJava ethereumJava;
 
-
     final String ACCOUNT = "0x79db03078440f2750d61bbb9b706d02769f6562a";
     final String PASSWORD = "toto";
 

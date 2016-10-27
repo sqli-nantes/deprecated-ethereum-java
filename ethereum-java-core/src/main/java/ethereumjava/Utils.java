@@ -34,7 +34,7 @@ public abstract class Utils {
         Type returnType = null;
         if( m.getReturnType().isAssignableFrom(Observable.class) ) {
             ParameterizedType returnParameterizedType = (ParameterizedType) m.getGenericReturnType();
-            returnType = returnParameterizedType.getRawType();
+            returnType = returnParameterizedType.getActualTypeArguments()[0];
         } else {
             returnType = m.getReturnType();
         }

@@ -17,17 +17,21 @@ import static org.junit.Assert.assertTrue;
 public class ModulesTest extends EthereumRPCJavaTest {
 
     @Test
-    public void testModules() throws Exception{
-
+    public void nodeInfoTest() throws Exception{
         NodeInfo nodeInfo = ethereumJava.admin.nodeInfo();
         System.out.println(nodeInfo.toString());
+    }
 
-        Block<Hash> block = ethereumJava.eth.block(BigInteger.valueOf(11), Hash.class);
-        System.out.println(block.toString());
+    @Test
+    public void blockTxObjectTest() throws Exception{
+        Block<Transaction> block = ethereumJava.eth.block(Hash.valueOf("0x2f57edeb015a8782f6220ae5a2e865259242a2c9b4352c06638b3d8bec86b179"), Transaction.class);
+        assertTrue(block.transactions.get(0) instanceof Transaction);
+    }
 
-        Block<Transaction> block1 = ethereumJava.eth.block(BigInteger.valueOf(11), Transaction.class);
-        System.out.println(block.toString());
-
+    @Test
+    public void blockTxHashTest() throws Exception{
+        Block<Hash> block = ethereumJava.eth.block(Hash.valueOf("0x2f57edeb015a8782f6220ae5a2e865259242a2c9b4352c06638b3d8bec86b179"), Hash.class);
+        assertTrue(block.transactions.get(0) instanceof Hash);
     }
 
 }

@@ -1,15 +1,12 @@
 package ethereumjava.solidity.types;
 
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by gunicolas on 16/08/16.

@@ -1,7 +1,7 @@
 package ethereumjava.solidity;
 
 import ethereumjava.module.Eth;
-import ethereumjava.module.objects.Filter;
+import ethereumjava.module.objects.DefaultFilter;
 import ethereumjava.module.objects.FilterOptions;
 import ethereumjava.solidity.coder.SCoderMapper;
 import ethereumjava.solidity.coder.decoder.SDecoder;
@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class SolidityEvent<T> extends SolidityElement{
 
-    Filter filter;
+    DefaultFilter defaultFilter;
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
@@ -80,12 +80,12 @@ public class SolidityEvent<T> extends SolidityElement{
         }
 
         FilterOptions options = encode();
-        this.filter  = new Filter(options,eth,decoder);
-        return filter.watch();
+        this.defaultFilter = new DefaultFilter(options,eth,decoder);
+        return defaultFilter.watch();
     }
 
     public Observable stopWatching(){
-        return this.filter.stopWatching();
+        return this.defaultFilter.stopWatching();
     }
 
 }

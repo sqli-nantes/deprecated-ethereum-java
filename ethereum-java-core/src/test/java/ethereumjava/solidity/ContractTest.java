@@ -2,6 +2,7 @@ package ethereumjava.solidity;
 
 import ethereumjava.EthereumJava;
 import ethereumjava.module.objects.Hash;
+import ethereumjava.module.objects.Transaction;
 import ethereumjava.net.provider.RpcProvider;
 import ethereumjava.solidity.types.SUInt;
 import ethereumjava.solidity.types.SVoid;
@@ -9,11 +10,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscriber;
+import rx.observers.TestSubscriber;
+import rx.schedulers.Schedulers;
 
 import java.math.BigInteger;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -25,8 +30,8 @@ public class ContractTest {
     EthereumJava ethereumJava;
 
 
-    final String ACCOUNT = "0xc74a32dd958075a6a31db72db3fa1b7c57350d6c";
-    final String CONTRACT_ADDRESS = "0x1eeffd13b8e5a7b4d8964652fe37c60fca16e9ff";
+    final String ACCOUNT = "0x79db03078440f2750d61bbb9b706d02769f6562a";
+    final String CONTRACT_ADDRESS = "0x30d7c09d4dd11adef003b75309c3ad237c652010";
 
     final String PASSWORD = "toto";
 
@@ -125,59 +130,17 @@ public class ContractTest {
 
     }
 
-    boolean wait = true;
 
     @Test
     public void testContractOnStateChanged() throws Exception{
 
+        Observable<Transaction> obsTransac = choupetteContract.RentMe().sendTransactionAndGetMined(ACCOUNT, new BigInteger("90000"));
+
+        Transaction tx = obsTransac.toBlocking().first();
+        assertNotNull(tx);
 
 
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            final SolidityEvent event = choupetteContract.OnStateChanged();
-            Observable<SUInt.SUInt256> obs = event.watch();
-            obs.subscribe(new Subscriber<SUInt.SUInt256>() {
-                @Override
-                public void onCompleted() {
-                    System.out.println("end of filter");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    System.out.println(e.getMessage());
-                }
-
-                @Override
-                public void onNext(SUInt.SUInt256 ret) {
-                    System.out.println("state : " + ret.asString());
-                    wait = false;
-                }
-            });
-
-            }
-        }).start();
-
-        synchronized (this){
-            this.wait(1000);
-        }
-
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("Call RentMe()");
-                choupetteContract.RentMe().sendTransaction(ACCOUNT, new BigInteger("90000"));
-            }
-        }).start();
-
-        synchronized (this){
-            while(wait) {
-                this.wait(100);
-            }
-        }
     }
 
 }
