@@ -3,6 +3,7 @@ package ethereumjava.module;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import ethereumjava.module.annotation.GenericTypeIndex;
 import ethereumjava.module.objects.*;
 import ethereumjava.solidity.SolidityUtils;
 import rx.Observable;
@@ -20,11 +21,15 @@ public interface  Eth {
     Observable<BigDecimal> getBalance(String account);
 
     @EthereumMethod(name="getBlockByHash")
+    @GenericTypeIndex(1)
     <T extends TransactionFormat> Block<T> block(Hash hash, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
+    @GenericTypeIndex(1)
     <T extends TransactionFormat> Observable<Block<T>> getBlock(Hash hash, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
 
     @EthereumMethod(name="getBlockByNumber")
+    @GenericTypeIndex(1)
     <T extends TransactionFormat> Block<T> block(BigInteger number, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
+    @GenericTypeIndex(1)
     <T extends TransactionFormat> Observable<Block<T>> getBlock(BigInteger number, @ConvertParam(with=GetBlockClassConverter.class) Class<T> transactionType);
 
     @EthereumMethod(name="getTransactionByHash")

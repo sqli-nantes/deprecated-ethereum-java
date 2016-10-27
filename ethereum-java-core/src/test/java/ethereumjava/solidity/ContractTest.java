@@ -80,7 +80,6 @@ public class ContractTest {
     public void testContractRentMe() throws Exception{
 
         Hash txHash = choupetteContract.RentMe().sendTransaction(ACCOUNT, new BigInteger("90000"));
-
         assertTrue(txHash!=null);
     }
 
@@ -88,15 +87,13 @@ public class ContractTest {
     public void testContractStopRent() throws Exception{
 
         Hash txHash = choupetteContract.StopRent().sendTransaction(ACCOUNT, new BigInteger("90000"));
-
         assertTrue(txHash!=null);
     }
 
     @Test
     public void testContractStartRent() throws Exception{
 
-        Hash txHash = choupetteContract.StartRent().sendTransaction(ACCOUNT, new BigInteger("90000"));
-
+        Hash txHash = choupetteContract.StartRent().sendTransaction(ACCOUNT, new BigInteger("90000"), SolidityUtils.toWei("1","ether").toBigInteger());
         assertTrue(txHash!=null);
     }
 
@@ -104,7 +101,6 @@ public class ContractTest {
     public void testContractValidateTravel() throws Exception{
 
         Hash txHash = choupetteContract.ValidateTravel().sendTransaction(ACCOUNT, new BigInteger("90000"));
-
         assertTrue(txHash!=null);
 
     }
@@ -125,7 +121,6 @@ public class ContractTest {
     public void testContractGetPrice() throws Exception{
 
         SUInt.SUInt256 response = (SUInt.SUInt256) choupetteContract.GetPrice().call();
-
         assertEquals(new BigInteger("1000000"),response.get());
 
     }
@@ -134,6 +129,9 @@ public class ContractTest {
 
     @Test
     public void testContractOnStateChanged() throws Exception{
+
+
+
 
         new Thread(new Runnable() {
             @Override
@@ -181,4 +179,5 @@ public class ContractTest {
             }
         }
     }
+
 }

@@ -1,14 +1,15 @@
 package ethereumjava;
 
+import ethereumjava.exception.EthereumJavaException;
+import ethereumjava.module.annotation.EthereumMethod;
+import ethereumjava.module.annotation.GenericTypeIndex;
+import rx.Observable;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.util.Arrays;
-
-import rx.Observable;
-import ethereumjava.exception.EthereumJavaException;
-import ethereumjava.module.annotation.EthereumMethod;
 
 /**
  * Created by gunicolas on 22/08/16.
@@ -17,13 +18,52 @@ import ethereumjava.module.annotation.EthereumMethod;
 public abstract class Utils {
 
 
+    /*
+    Check given method to extract it's return type or parametized type with the exact generic type
+    (must be defined in parameters and method annotated with GenericTypeIndex ).
+    The return type can be the generic of an Observable.
+    ex:
+        Observable<String> --> String
+        Block<Hash> --> Block<Hash>
+        Observable<Block<Transaction>> --> Block<Transaction>
+
+     */
     @SuppressWarnings("unchecked")
-    public static Type extractReturnType(Method m){
+    public static Type extractReturnType(Method m,Object[] args){
+
+        Type returnType = null;
         if( m.getReturnType().isAssignableFrom(Observable.class) ) {
             ParameterizedType returnParameterizedType = (ParameterizedType) m.getGenericReturnType();
-            return returnParameterizedType.getActualTypeArguments()[0];
+            returnType = returnParameterizedType.getRawType();
+        } else {
+            returnType = m.getReturnType();
         }
-        return m.getGenericReturnType();
+
+        GenericTypeIndex annotation = m.getAnnotation(GenericTypeIndex.class);
+        if( annotation != null ){
+            int index = annotation.value();
+            if( index < 0 || index >= args.length ) throw new EthereumJavaException("GenericTypeIndex value out of bounds");
+            Class genericType = (Class) args[index];
+            returnType = getType((Class<?>) returnType,genericType); //TODO Dangerous cast -- check why getType can't take "Type" parameters
+        }
+        return returnType;
+    }
+
+    public static Type getType(final Class<?> rawClass, final Class<?> parameter) {
+        return new ParameterizedType() {
+            @Override
+            public Type[] getActualTypeArguments() {
+                return new Type[] {parameter};
+            }
+            @Override
+            public Type getRawType() {
+                return rawClass;
+            }
+            @Override
+            public Type getOwnerType() {
+                return null;
+            }
+        };
     }
 
     public static String formatArgsToString(Object[] args) {

@@ -54,6 +54,10 @@ public class TransactionRequest {
         this.gasHex = SolidityUtils.toHex(new BigDecimal(gas));
     }
 
+    public void setValueHex(BigInteger valueHex) {
+        this.valueHex = SolidityUtils.toHex(new BigDecimal(valueHex));
+    }
+
     @Override
     public String toString() {
 

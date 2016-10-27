@@ -16,6 +16,7 @@ import ethereumjava.module.converter.ParameterConverter;
 import ethereumjava.net.Request;
 import ethereumjava.net.provider.Provider;
 import ethereumjava.solidity.Contract;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 public class EthereumJava {
 
@@ -73,11 +74,14 @@ public class EthereumJava {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
+            Type returnType = Utils.extractReturnType(method,args); //Must extract from originial parameters (next instruction convert these parameters)
+
             args = convertArgumentsIfNecessary(method,args);
             String formattedArgs = Utils.formatArgsToString(args);
             String moduleName = method.getDeclaringClass().getSimpleName().toLowerCase();
             String methodName = "_"+Utils.extractMethodName(method);
-            Type returnType = Utils.extractReturnType(method);
+
+
             Request request = new Request(moduleName+methodName,formattedArgs,returnType);
 
             Observable<?> result = provider.sendRequest(request);

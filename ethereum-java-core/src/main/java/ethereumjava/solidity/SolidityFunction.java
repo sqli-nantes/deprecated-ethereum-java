@@ -68,17 +68,28 @@ public class SolidityFunction<T extends SType> extends SolidityElement{
     }
 
 
-    private TransactionRequest formatRequest(String from, BigInteger gas){
+    private TransactionRequest formatRequest(String from, BigInteger gas,BigInteger value){
         //TODO can estimate gas before
         String payload = encode();
         TransactionRequest request = new TransactionRequest(from,address);
         request.setGas(gas);
         request.setDataHex(payload);
+        if( value != null ) {
+            request.setValueHex(value);
+        }
         return request;
+    }
+
+    private TransactionRequest formatRequest(String from, BigInteger gas){
+        return formatRequest(from,gas,null);
     }
 
     public Hash sendTransaction(String from, BigInteger gas){
         return eth.sendTransaction(formatRequest(from,gas));
+    }
+
+    public Hash sendTransaction(String from, BigInteger gas,BigInteger value){
+        return eth.sendTransaction(formatRequest(from,gas,value));
     }
 
     public T call(){
