@@ -30,8 +30,8 @@ public class ContractTest {
     EthereumJava ethereumJava;
 
 
-    final String ACCOUNT = "0x79db03078440f2750d61bbb9b706d02769f6562a";
-    final String CONTRACT_ADDRESS = "0x30d7c09d4dd11adef003b75309c3ad237c652010";
+    final String ACCOUNT = "0xa9d28b5d7688fab363a3304992e48966118a4b8d";
+    final String CONTRACT_ADDRESS = "0x10d92052e9ef32e8074bbd319ca3c30c4204b6de";
 
     final String PASSWORD = "toto";
 
@@ -135,6 +135,11 @@ public class ContractTest {
     public void testContractOnStateChanged() throws Exception{
 
         Observable<Transaction> obsTransac = choupetteContract.RentMe().sendTransactionAndGetMined(ACCOUNT, new BigInteger("90000"));
+
+
+
+
+
 
         Transaction tx = obsTransac.toBlocking().first();
         assertNotNull(tx);
