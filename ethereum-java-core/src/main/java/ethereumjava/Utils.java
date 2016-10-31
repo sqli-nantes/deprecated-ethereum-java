@@ -32,9 +32,12 @@ public abstract class Utils {
     public static Type extractReturnType(Method m,Object[] args){
 
         Type returnType = null;
-        if( m.getReturnType().isAssignableFrom(Observable.class) ) {
+        if( m.getReturnType().isAssignableFrom(Observable.class) ) { // Case of Observable<Object>
             ParameterizedType returnParameterizedType = (ParameterizedType) m.getGenericReturnType();
-            returnType = returnParameterizedType.getActualTypeArguments()[0];
+            returnType = returnParameterizedType.getActualTypeArguments()[0]; // Extract Object type
+            if( returnType instanceof ParameterizedType ){ // If Object is Object<?>
+                returnType = ((ParameterizedType) returnType).getRawType(); // Extract Object class type
+            }
         } else {
             returnType = m.getReturnType();
         }

@@ -12,6 +12,7 @@ import org.junit.Test;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
+import rx.observers.Subscribers;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 
@@ -30,8 +31,8 @@ public class ContractTest {
     EthereumJava ethereumJava;
 
 
-    final String ACCOUNT = "0x79db03078440f2750d61bbb9b706d02769f6562a";
-    final String CONTRACT_ADDRESS = "0x30d7c09d4dd11adef003b75309c3ad237c652010";
+    final String ACCOUNT = "0xa9d28b5d7688fab363a3304992e48966118a4b8d";
+    final String CONTRACT_ADDRESS = "0x10d92052e9ef32e8074bbd319ca3c30c4204b6de";
 
     final String PASSWORD = "toto";
 
@@ -135,6 +136,28 @@ public class ContractTest {
     public void testContractOnStateChanged() throws Exception{
 
         Observable<Transaction> obsTransac = choupetteContract.RentMe().sendTransactionAndGetMined(ACCOUNT, new BigInteger("90000"));
+
+        //start loader
+        obsTransac
+                .observeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.immediate())
+                .subscribe(new Subscriber<Transaction>() {
+            @Override
+            public void onCompleted() {
+                //stop loader
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Transaction transaction) {
+
+            }
+        });
+
 
         Transaction tx = obsTransac.toBlocking().first();
         assertNotNull(tx);

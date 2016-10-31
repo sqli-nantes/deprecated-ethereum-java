@@ -23,8 +23,6 @@ public class BlockFilter extends AbstractFilter<List<String>> {
         return eth.newBlockFilter();
     }
 
-
-
     @Override
     void onNewData(List<String> data) {
         for(Subscriber<List<String>> subscriber : filterCallbacks ) {
