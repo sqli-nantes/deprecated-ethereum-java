@@ -9,24 +9,31 @@ import ethereumjava.module.Eth;
 /**
  * Created by gunicolas on 30/08/16.
  */
-public class Contract<T extends ContractType> {
+public class Contract {
 
-    Class<T> abi;
     String address;
     Eth eth;
+
+    public final class ContractInstance<T extends ContractType> {
+        Class<T> clazz;
+
+        public ContractInstance(Class<T> aClazz) {
+            clazz = aClazz;
+        }
+
+        public T at(String address){
+            Contract.this.address = address;
+            return (T) Proxy.newProxyInstance(clazz.getClassLoader(),new Class[]{clazz},new InvocationHandler());
+        }
+
+    }
 
     public Contract(Eth eth){
         this.eth = eth;
     }
 
-    public Contract<T> withAbi(Class<T> abi){
-        this.abi = abi;
-        return this;
-    }
-
-    public T at(String address){
-        this.address = address;
-        return (T) Proxy.newProxyInstance(abi.getClassLoader(),new Class[]{abi},new InvocationHandler());
+    public <T extends ContractType> ContractInstance<T> withAbi(Class<T> clazz){
+        return new ContractInstance(clazz);
     }
 
     class InvocationHandler implements java.lang.reflect.InvocationHandler{
