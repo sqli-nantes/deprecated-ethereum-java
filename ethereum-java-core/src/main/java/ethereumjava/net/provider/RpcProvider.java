@@ -95,8 +95,12 @@ public class RpcProvider extends AbstractProvider {
 		} finally {
 			this.connection.disconnect();
 			try {
-				outputStream.close();
-				inputStream.close();
+				if (outputStream != null) {
+					outputStream.close();
+				}
+				if (inputStream != null) {
+					inputStream.close();
+				}
 			} catch (IOException e) {
 				throw new EthereumJavaException(e);
 			}
