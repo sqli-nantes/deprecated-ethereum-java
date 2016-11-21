@@ -10,12 +10,11 @@ import java.util.List;
  * Created by gunicolas on 20/10/16.
  */
 //List<String> is the list of new block hash since last poll
-public class BlockFilter extends AbstractFilter<List<String>> {
+public class BlockFilter extends AbstractFilter<String> {
 
 
     public BlockFilter(Eth eth) {
         super(eth);
-
     }
 
     @Override
@@ -23,10 +22,4 @@ public class BlockFilter extends AbstractFilter<List<String>> {
         return eth.newBlockFilter();
     }
 
-    @Override
-    void onNewData(List<String> data) {
-        for(Subscriber<List<String>> subscriber : filterCallbacks ) {
-            subscriber.onNext(data);
-        }
-    }
 }

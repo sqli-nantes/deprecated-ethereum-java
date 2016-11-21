@@ -4,6 +4,7 @@ import ethereumjava.module.Eth;
 import ethereumjava.solidity.coder.decoder.SDecoder;
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @param <T> Logs data type
  */
-public class DefaultFilter<T> extends AbstractFilter<Log[]> {
+public class DefaultFilter<T> extends AbstractFilter<Log> {
 
     Class<? extends SDecoder<T>> returnDecoder;
 
@@ -32,8 +33,9 @@ public class DefaultFilter<T> extends AbstractFilter<Log[]> {
         return eth.newFilter(options);
     }
 
-    @Override
-    void onNewData(Log[] logs) {
+
+/*@Override
+    void onNewData(Log logs) {
         if( logs == null ){
             return;
         }
@@ -55,5 +57,5 @@ public class DefaultFilter<T> extends AbstractFilter<Log[]> {
                 }
             }
         }
-    }
+    }*/
 }

@@ -30,9 +30,8 @@ public class ContractTest {
 
     EthereumJava ethereumJava;
 
-
-    final String ACCOUNT = "0xa9d28b5d7688fab363a3304992e48966118a4b8d";
-    final String CONTRACT_ADDRESS = "0x10d92052e9ef32e8074bbd319ca3c30c4204b6de";
+    String coinbase;
+    final String CONTRACT_ADDRESS = "0xf673d7d1d6f8b8104d01843cd7fa7a8a272115d9";
 
     final String PASSWORD = "toto";
 
@@ -44,7 +43,8 @@ public class ContractTest {
                 .provider(new RpcProvider("http://localhost:8547"))
                 .build();
 
-        ethereumJava.personal.unlockAccount(ACCOUNT,PASSWORD,3600);
+        coinbase = ethereumJava.personal.listAccounts().get(0);
+        ethereumJava.personal.unlockAccount(coinbase,PASSWORD,3600);
         choupetteContract = (ChoupetteContract) ethereumJava.contract.withAbi(ChoupetteContract.class).at(CONTRACT_ADDRESS);
     }
 
@@ -85,28 +85,28 @@ public class ContractTest {
     @Test
     public void testContractRentMe() throws Exception{
 
-        Hash txHash = choupetteContract.RentMe().sendTransaction(ACCOUNT, new BigInteger("90000"));
+        Hash txHash = choupetteContract.RentMe().sendTransaction(coinbase, new BigInteger("90000"));
         assertTrue(txHash!=null);
     }
 
     @Test
     public void testContractStopRent() throws Exception{
 
-        Hash txHash = choupetteContract.StopRent().sendTransaction(ACCOUNT, new BigInteger("90000"));
+        Hash txHash = choupetteContract.StopRent().sendTransaction(coinbase, new BigInteger("90000"));
         assertTrue(txHash!=null);
     }
 
     @Test
     public void testContractStartRent() throws Exception{
 
-        Hash txHash = choupetteContract.StartRent().sendTransaction(ACCOUNT, new BigInteger("90000"), SolidityUtils.toWei("1","ether").toBigInteger());
+        Hash txHash = choupetteContract.StartRent().sendTransaction(coinbase, new BigInteger("90000"), SolidityUtils.toWei("1","ether").toBigInteger());
         assertTrue(txHash!=null);
     }
 
     @Test
     public void testContractValidateTravel() throws Exception{
 
-        Hash txHash = choupetteContract.ValidateTravel().sendTransaction(ACCOUNT, new BigInteger("90000"));
+        Hash txHash = choupetteContract.ValidateTravel().sendTransaction(coinbase, new BigInteger("90000"));
         assertTrue(txHash!=null);
 
     }
@@ -117,7 +117,7 @@ public class ContractTest {
         Hash txHash = choupetteContract
                 .GoTo(  SUInt.fromBigInteger256(BigInteger.valueOf(3)),
                         SUInt.fromBigInteger256(BigInteger.valueOf(2)))
-                .sendTransaction(ACCOUNT, new BigInteger("90000"));
+                .sendTransaction(coinbase, new BigInteger("90000"));
 
         assertTrue(txHash!=null);
 
@@ -135,35 +135,29 @@ public class ContractTest {
     @Test
     public void testContractOnStateChanged() throws Exception{
 
-        Observable<Transaction> obsTransac = choupetteContract.RentMe().sendTransactionAndGetMined(ACCOUNT, new BigInteger("90000"));
+        Observable<Transaction> obs = choupetteContract.RentMe().sendTransactionAndGetMined(coinbase, new BigInteger("90000"));
+        obs .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.immediate())
+            .subscribe(new Subscriber<Transaction>() {
+                @Override
+                public void onCompleted() {
+                    System.out.println("COMPLETE");
+                }
 
-        //start loader
-        obsTransac
-                .observeOn(Schedulers.computation())
-                .subscribeOn(Schedulers.immediate())
-                .subscribe(new Subscriber<Transaction>() {
-            @Override
-            public void onCompleted() {
-                //stop loader
-            }
+                @Override
+                public void onError(Throwable e) {
+                    System.out.println("ERROR : "+e.getMessage());
+                }
 
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(Transaction transaction) {
-
-            }
-        });
-
-
-        Transaction tx = obsTransac.toBlocking().first();
-        assertNotNull(tx);
-
-
-
+                @Override
+                public void onNext(Transaction transaction) {
+                    if( transaction != null ) {
+                        System.out.println("received "+transaction.toString() + " on "+Thread.currentThread().getName());
+                    } else{
+                        System.out.println("NULL");
+                    }
+                }
+            });
     }
 
 }

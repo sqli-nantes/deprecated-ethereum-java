@@ -30,7 +30,8 @@ public abstract class AbstractFilter<T> {
         this.eth = eth;
         this.filterCallbacks = new ArrayList<>();
 
-        Observable<String> callback = createFilter();
+        filterId = createFilter().toBlocking().first();
+
 
 //        createFilter() // Observable<String>
 
@@ -61,112 +62,23 @@ public abstract class AbstractFilter<T> {
 //                return null;
 //            }
 //        });
-
-        callback.subscribe(new Subscriber<String>() {
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                for(Subscriber subscriber : filterCallbacks){
-                    subscriber.onError(e);
-                }
-            }
-
-            @Override
-            public void onNext(String s) {
-                filterId = s;
-
-                if( pollingThread == null && filterCallbacks.size() > 0 ){
-                    poll();
-                }
-            }
-        });
     }
 
     abstract Observable<String> createFilter();
 
-    //TODO externalise POLL and let it POLL multiple methods at the same time
-    void poll(){
-/*
-        pollingObservable = (Observable) Observable.interval(POLLING_TIMEOUT, TimeUnit.MILLISECONDS)
-            .flatMap(new Func1<Long, Observable<T>>(){
-                @Override
-                public Observable<T> call(Long aLong) {
-                    return (Observable<T>) eth.getFilterChanges(filterId);
-                }
-            })
-            .subscribeOn(Schedulers.newThread())
-            .subscribe(new Subscriber<T>() {
-                @Override
-                public void onCompleted() {
-
-                }
-
-                @Override
-                public void onError(Throwable e) {
-
-                }
-
-                @Override
-                public void onNext(T t) {
-
-                }
-            });*/
-
-
-        pollingThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    Observable<T> changesObservable = (Observable<T> ) eth.getFilterChanges(filterId);
-
-                    changesObservable.subscribe(new Subscriber<T>() {
-                        @Override
-                        public void onCompleted() {
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            for(Subscriber subscriber : filterCallbacks )
-                                subscriber.onError(e);
-                        }
-
-                        @Override
-                        public void onNext(T t) {
-                            onNewData(t);
-                        }
-                    });
-
-                    try {
-                        Thread.sleep(POLLING_TIMEOUT);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        });
-
-        pollingThread.start();
-
-    }
-
-    abstract void onNewData(T data);
-
     public Observable<T> watch(){
-        return Observable.create(new Observable.OnSubscribe<T>(){
-            @Override
-            public void call(Subscriber<? super T> subscriber) {
-                filterCallbacks.add(subscriber);
-
-                if( filterId != null ){
-                    poll();
-                }
-            }
-        });
+        return Observable.interval(POLLING_TIMEOUT,TimeUnit.MILLISECONDS)
+                .flatMap(new Func1<Long, Observable<List<T>>>() {
+                    @Override
+                    public  Observable<List<T>> call(Long l) {
+                        return eth.getFilterChanges(filterId);
+                    }
+                }).flatMap(new Func1<List<T>, Observable<T>>() {
+                    @Override
+                    public Observable<T> call(List<T> ts) {
+                        return Observable.from(ts);
+                    }
+                });
     }
 
     public Observable stopWatching(){

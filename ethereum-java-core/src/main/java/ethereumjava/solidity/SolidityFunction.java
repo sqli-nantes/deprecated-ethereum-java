@@ -10,6 +10,7 @@ import ethereumjava.solidity.coder.decoder.SDecoder;
 import ethereumjava.solidity.types.SType;
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,7 +18,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -98,66 +98,41 @@ public class SolidityFunction<T extends SType> extends SolidityElement{
 
     public Observable<Transaction> sendTransactionAndGetMined(String from, BigInteger gas){
 
-        final List<Subscriber<Transaction>> subscribers = new ArrayList<>();
-
         final Hash txHash = sendTransaction(from, gas);
         if( txHash == null ) return null;
 
-        BlockFilter blockFilter = new BlockFilter(eth);
-        Observable<List<String>> obs = blockFilter.watch();
-
-        obs.subscribe(new Subscriber<List<String>>() {
-            @Override
-            public void onCompleted() {
-                for (Subscriber sub : subscribers) {
-                    sub.onCompleted();
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                for (Subscriber sub : subscribers) {
-                    sub.onError(e);
-                }
-            }
-
-            @Override
-            public void onNext(List<String> hashs) {
-
-                if(hashs != null && hashs.size() > 0 ) {
-                    for(String hash : hashs) {
-                        Block<Transaction> block = null;
-                        try {
-                            block = eth.block(Hash.valueOf(hash), Transaction.class);
-                        } catch (EthereumJavaException e) {
-                            onError(e);
-                            return;
-                        }
-
-                        if (block == null) return;
-
-                        for (Transaction transaction : block.transactions) {
-                            if (transaction.hash.getValue().equals(txHash.getValue())) {
-                                for (Subscriber sub : subscribers) {
-                                    sub.onNext(transaction);
-                                    sub.onCompleted();
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        return Observable.create(new Observable.OnSubscribe<Transaction>() {
-            @Override
-            public void call(Subscriber< ? super Transaction> subscriber) {
-                subscribers.add((Subscriber<Transaction>) subscriber);
-            }
-        });
-
+        return new BlockFilter(eth)
+            .watch()
+            .flatMap(getBlockFromHash())
+            .flatMap(getTransactionsOfBlock())
+            .filter(keepGivenTransaction(txHash));
     }
+
+    private Func1<Transaction, Boolean> keepGivenTransaction(final Hash txHash) {
+        return new Func1<Transaction, Boolean>() {
+        @Override
+        public Boolean call(Transaction transaction) {
+            return transaction.hash.getValue().equals(txHash.getValue());
+        }
+    };
+    }
+    private Func1<Block<Transaction>, Observable<Transaction>> getTransactionsOfBlock() {
+        return new Func1<Block<Transaction>, Observable<Transaction>>() {
+            @Override
+            public Observable<Transaction> call(Block<Transaction> transactionBlock) {
+                return Observable.from(transactionBlock.transactions);
+            }
+         };
+    }
+    private Func1<String, Observable<Block<Transaction>>> getBlockFromHash() {
+        return new Func1<String, Observable<Block<Transaction>>>() {
+            @Override
+            public Observable<Block<Transaction>> call(String blockHash) {
+                return eth.getBlock(Hash.valueOf(blockHash), Transaction.class);
+            }
+        };
+    }
+
 
     public T call(){
 

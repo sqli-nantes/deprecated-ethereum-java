@@ -52,9 +52,14 @@ public interface  Eth {
     @EthereumMethod(name="getFilterLogs")
     Observable<Log[]> getFilterLogs(String filterId);
 
+    /**
+     * Polling method for a filter, which returns an array of logs which occurred since last poll.
+     * @param filterId filter id got with eth.newFilter()
+     * @param <T> returned log object type. Differs when it's a BlockFilter (Hash) or a DefaultFilter (Log)
+     * @return an observable of List of T objects. Logs of changes since last poll
+     */
     @EthereumMethod(name="getFilterChanges")
-    //Observable<List<Hash>> getFilterChanges(String filterId);
-    Observable<Object> getFilterChanges(String filterId);
+    <T> Observable<List<T>> getFilterChanges(String filterId);
 
     Observable uninstallFilter(String filterId);
 
