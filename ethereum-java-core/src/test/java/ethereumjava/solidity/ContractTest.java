@@ -7,11 +7,13 @@ import ethereumjava.net.provider.RpcProvider;
 import ethereumjava.solidity.types.SUInt;
 import ethereumjava.solidity.types.SVoid;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
+import rx.functions.Action1;
 import rx.observers.Subscribers;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
@@ -63,21 +65,21 @@ public class ContractTest {
         SolidityEvent<SUInt.SUInt256> OnStateChanged();
 
         @SolidityFunction.ReturnType(SVoid.class)
-        SolidityFunction RentMe();
+        SolidityFunction<SVoid> RentMe();
 
         @SolidityFunction.ReturnType(SVoid.class)
-        SolidityFunction StopRent();
+        SolidityFunction<SVoid> StopRent();
 
         @SolidityFunction.ReturnType(SVoid.class)
-        SolidityFunction StartRent();
+        SolidityFunction<SVoid> StartRent();
 
         @SolidityFunction.ReturnType(SVoid.class)
-        SolidityFunction ValidateTravel();
+        SolidityFunction<SVoid> ValidateTravel();
 
         @SolidityFunction.ReturnType(SVoid.class)
-        SolidityFunction GoTo(SUInt.SUInt256 x, SUInt.SUInt256 y);
+        SolidityFunction<SVoid> GoTo(SUInt.SUInt256 x, SUInt.SUInt256 y);
         @SolidityFunction.ReturnType(SUInt.SUInt256.class)
-        SolidityFunction GetPrice();
+        SolidityFunction<SUInt.SUInt256> GetPrice();
 
 
     }
@@ -131,31 +133,16 @@ public class ContractTest {
 
     }
 
-
     @Test
     public void testContractOnStateChanged() throws Exception{
 
         Observable<Transaction> obs = choupetteContract.RentMe().sendTransactionAndGetMined(coinbase, new BigInteger("90000"));
         obs .subscribeOn(Schedulers.computation())
             .observeOn(Schedulers.immediate())
-            .subscribe(new Subscriber<Transaction>() {
+            .subscribe(new Action1<Transaction>() {
                 @Override
-                public void onCompleted() {
-                    System.out.println("COMPLETE");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    System.out.println("ERROR : "+e.getMessage());
-                }
-
-                @Override
-                public void onNext(Transaction transaction) {
-                    if( transaction != null ) {
-                        System.out.println("received "+transaction.toString() + " on "+Thread.currentThread().getName());
-                    } else{
-                        System.out.println("NULL");
-                    }
+                public void call(Transaction transaction) {
+                    Assert.assertNotNull(transaction);
                 }
             });
     }

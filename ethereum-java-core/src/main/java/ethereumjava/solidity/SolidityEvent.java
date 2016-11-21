@@ -1,12 +1,16 @@
 package ethereumjava.solidity;
 
+import ethereumjava.EthereumJava;
+import ethereumjava.exception.EthereumJavaException;
 import ethereumjava.module.Eth;
 import ethereumjava.module.objects.DefaultFilter;
 import ethereumjava.module.objects.FilterOptions;
+import ethereumjava.module.objects.Log;
 import ethereumjava.solidity.coder.SCoderMapper;
 import ethereumjava.solidity.coder.decoder.SDecoder;
 import ethereumjava.solidity.types.SType;
 import rx.Observable;
+import rx.functions.Func1;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -20,8 +24,6 @@ import java.util.List;
  * Created by gunicolas on 4/08/16.
  */
 public class SolidityEvent<T> extends SolidityElement{
-
-    DefaultFilter defaultFilter;
 
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
@@ -43,8 +45,17 @@ public class SolidityEvent<T> extends SolidityElement{
         Class<? extends SType> type();
     }
 
+
+    Class<? extends SDecoder<T>> decoder;
+    DefaultFilter defaultFilter;
+
     public SolidityEvent(String address,Method method,Eth eth) {
         super(address,method,eth);
+
+        Class[] returnParams = getParametersTypes();
+        if( returnParams.length > 0 ) {
+            decoder = (Class<? extends SDecoder<T>>) SCoderMapper.getDecoderForClass(returnParams[0]); //TODO remove cast
+        }
     }
 
     @Override
@@ -73,15 +84,23 @@ public class SolidityEvent<T> extends SolidityElement{
 
     public Observable<T> watch(){
 
-        Class[] returnParams = getParametersTypes();
-        Class<? extends SDecoder> decoder = null;
-        if( returnParams.length > 0 ) {
-            decoder = SCoderMapper.getDecoderForClass(returnParams[0]);
-        }
-
         FilterOptions options = encode();
-        this.defaultFilter = new DefaultFilter(options,eth,decoder);
-        return defaultFilter.watch();
+        new DefaultFilter(options,eth);
+        return defaultFilter.watch()
+                .map(decodeLog());
+    }
+
+    private Func1<Log, T> decodeLog() {
+        return new Func1<Log, T>() {
+            @Override
+            public T call(Log log) {
+                try {
+                    return decoder.newInstance().decode(log.data);
+                } catch (Exception e) { //TODO remove InstantiationException, IllegalAccessException. Decoder must be static
+                    throw new EthereumJavaException(e);
+                }
+            }
+        };
     }
 
     public Observable stopWatching(){

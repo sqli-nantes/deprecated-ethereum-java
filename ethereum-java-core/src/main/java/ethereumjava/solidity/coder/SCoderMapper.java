@@ -53,7 +53,7 @@ public abstract class SCoderMapper {
      * @param clazz the class looking for an decoder
      * @return a decoder for the given class
      */
-    public static  Class<? extends SDecoder> getDecoderForClass(Class clazz){
+    public static <T>  Class<? extends SDecoder> getDecoderForClass(Class clazz){
         if( clazz == null ) return null;
         Class<? extends SDecoder> ret = decoderMapping.get(clazz);
         if (ret != null) return ret;

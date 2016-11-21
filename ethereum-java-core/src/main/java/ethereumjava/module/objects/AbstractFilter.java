@@ -31,54 +31,31 @@ public abstract class AbstractFilter<T> {
         this.filterCallbacks = new ArrayList<>();
 
         filterId = createFilter().toBlocking().first();
-
-
-//        createFilter() // Observable<String>
-
-//                .map(getHashFromFilterId()) // Observable<Hash>
-
-//                .map(getBlockFromHash()) // Observable<Block>
-//                .map(getTransactionsFromBlock()); // Observable<Transaction>
-
-
-//
-//        Observable<List<Hash>> hashes = createFilter().flatMap(new Func1<String, Observable<List<Hash>>>() {
-//            @Override
-//            public Observable<List<Hash>> call(String s) {
-//                return eth.getFilterChanges(s);
-//            }
-//        });
-//
-//        createFilter()
-//                .map(new Func1<String, Observable<Object>>() {
-//            @Override
-//            public Observable<List<Hash>> call(String s) {
-//                return eth.getFilterChanges(s);
-//            }
-//        }).map(new Func1<Observable<List<Hash>>, Object>() {
-//
-//            @Override
-//            public Object call(Observable<List<Hash>> objectObservable) {
-//                return null;
-//            }
-//        });
     }
 
     abstract Observable<String> createFilter();
 
     public Observable<T> watch(){
         return Observable.interval(POLLING_TIMEOUT,TimeUnit.MILLISECONDS)
-                .flatMap(new Func1<Long, Observable<List<T>>>() {
-                    @Override
-                    public  Observable<List<T>> call(Long l) {
-                        return eth.getFilterChanges(filterId);
-                    }
-                }).flatMap(new Func1<List<T>, Observable<T>>() {
-                    @Override
-                    public Observable<T> call(List<T> ts) {
-                        return Observable.from(ts);
-                    }
-                });
+                .flatMap(getFilterChanges())
+                .flatMap(fromListToElement());
+    }
+
+    private Func1<List<T>, Observable<T>> fromListToElement() {
+        return new Func1<List<T>, Observable<T>>() {
+            @Override
+            public Observable<T> call(List<T> ts) {
+                return Observable.from(ts);
+            }
+        };
+    }
+    private Func1<Long, Observable<List<T>>> getFilterChanges() {
+        return new Func1<Long, Observable<List<T>>>() {
+            @Override
+            public  Observable<List<T>> call(Long l) {
+                return eth.getFilterChanges(filterId);
+            }
+        };
     }
 
     public Observable stopWatching(){
