@@ -10,7 +10,7 @@
     "licenses": ["MIT"],
     "labels": ["blockchain", "ethereum", "java"],
     "public_download_numbers": false,
-    "public_stats": false,
+    "public_stats": false
   },
 
   "version": {
@@ -23,7 +23,7 @@
 
   "files":
   [
-    {"includePattern": "target/(.*)", "excludePattern": "target/.*.zip$", "uploadPattern": "/$1"}
+    {"includePattern": "ethereum-java-core/builds/libs/(.*)", "uploadPattern": "/$1"}
   ],
   "publish": true
 }
