@@ -1,15 +1,18 @@
 language: java
-
 jdk:
-  - oraclejdk7
-  - openjdk7
-
+- oraclejdk7
+- openjdk7
 script:
-  - ./gradlew assemble
-
+- "./gradlew assemble"
+deploy:
+  provider: bintray
+  file: bintray_descriptor.json
+  user: kbiger
+  key:
+    secure: OLxv9+lQq/3YV+RBdmLXwKxDg6IF8YsbL8wlBkbJfPRvP82ksgmTQOpbRJiOxJuVIjHxE0gOdvHjltxXTXmYz9MWrrdXfwx+zE2erTcYnQep+lmLVyAutnTIjEdTEuGROgtFK9hUe/nobb5gYYYB2UgftpCiUhM1D5jQhKm16BWZvBKeE3pnI6rmNnMkqysZuqFX5J9wcZKQQD2IwqhabnJwEB1YH9OAWG8RorA+idZEpit9M6SAjJLPwN9N6sdd+sjMfyOsIR929TSF2gRobaSPBZDkMU5HxwwgpHORsxDV+y3To5/b8BxsbxbNQmv1Qlu9wVhW0QWJSliYjZ/WBxEDpmJyCFZKjv3SEXKF/4Qby2n/5f6zvgaizWxuy/CNphATvh7jQ8SiUoAdzB22O7pNs/pwVbRWgUYjAsWyrwEqWWV7HElNWEP617sMXtTTM2eVEdET6k/ioLKnipuHvvK2WIrCEAIqbNcuOw/OhjUyjvrOmrUh9Jqi0xAphvZ6xhv6VtrclXqN84lCHg7m0deemwtGUt5uXD7D/0MZF8b9QGkNRun3wlC/F/PXmoXeGhn6SFaw7NTSp7J137uysbOgP8jiWiDUmhmu5pfFOt+Hs4RpTvY8l8ok7SlMeGVSEjfUURCwR6g0vp/BfK87qBtkZ0teF77MABrIQ4Ajr1M=
 notifications:
   slack:
-      on_success: change
-      on_failure: always
-      rooms:
-        - sqlinantes:8Usex84M6JTsUhBEymvhpm5w#team-blockchain
+    on_success: change
+    on_failure: always
+    rooms:
+    - sqlinantes:8Usex84M6JTsUhBEymvhpm5w#team-blockchain
