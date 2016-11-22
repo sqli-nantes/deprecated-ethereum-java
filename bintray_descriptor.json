@@ -4,7 +4,7 @@
     "repo": "ethereum-java",
     "subject": "sqli-nantes",
     "desc": "I was pushed completely automatically",
-    "vcs_url": "https://github.com/sqli-nantes/ethereum-java ",
+    "vcs_url": "https://github.com/sqli-nantes/ethereum-java/",
     "github_use_tag_release_notes": true,
     "github_release_notes_file": "RELEASE.txt",
     "licenses": ["MIT"],
@@ -14,16 +14,17 @@
   },
 
   "version": {
-    "name": "1.1",
-    "desc": "This is a version",
+    "name": "1.0",
+    "desc": "This is the first version",
     "released": "2016-11-22",
-    "vcs_tag": "1.1",
+    "vcs_tag": "1.0",
     "gpgSign": false
   },
 
   "files":
   [
-    {"includePattern": "ethereum-java-core/build/libs/(.*)", "uploadPattern": "/$1"}
+    {"includePattern": "ethereum-java-core/build/libs/(.*)", "uploadPattern": "/$1"},
+    {"includePattern": "ethereum-java-sample/build/libs/(.*)", "uploadPattern": "samples/$1"},
   ],
   "publish": true
 }
