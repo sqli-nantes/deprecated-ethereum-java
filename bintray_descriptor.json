@@ -23,7 +23,7 @@
 
   "files":
   [
-    {"includePattern": "ethereum-java-core/builds/libs/(.*)", "uploadPattern": "/$1"}
+    {"includePattern": "ethereum-java-core/build/libs/(.*)", "uploadPattern": "/$1"}
   ],
   "publish": true
 }
