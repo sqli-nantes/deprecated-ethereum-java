@@ -16,8 +16,8 @@ import java.math.BigInteger;
 public interface  Eth {
 
     @EthereumMethod(name="getBalance")
-    BigInteger balance(String account);
-    Observable<BigDecimal> getBalance(String account);
+    BigInteger balance(String account, Block.BlockParameter parameter);
+    Observable<BigInteger> getBalance(String account, Block.BlockParameter parameter);
 
     @EthereumMethod(name="getBlockByHash")
     @GenericTypeIndex(1)

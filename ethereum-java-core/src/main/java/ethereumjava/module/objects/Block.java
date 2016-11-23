@@ -28,6 +28,21 @@ public class Block<T extends TransactionFormat> {
     public List<T> transactions;
     public List<String> uncles;
 
+    public enum BlockParameter{
+        LATEST ("latest"),
+        PENDING ("pending"),
+        EARLIEST ("earliest");
+
+        private String name;
+
+        BlockParameter(String name){
+            this.name = name;
+        }
+
+        public String toString(){
+            return "\""+name+"\"";
+        }
+    }
 
     @Override
     public String toString() {
