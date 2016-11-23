@@ -10,9 +10,9 @@ import rx.Observable;
 public interface Personal {
 
     List<String> listAccounts();
-    Observable<List<String>> listAccountsAsync();
 
     boolean unlockAccount(String address,String password,int duration);
+
     String newAccount(String password);
 
 
