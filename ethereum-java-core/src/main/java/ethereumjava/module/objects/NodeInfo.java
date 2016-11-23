@@ -20,7 +20,7 @@ public class NodeInfo {
         public Eth eth;
 
         public class Eth{
-            public BigInteger difficulty;
+            public String difficulty;
             public String genesis;
             public String head;
             public int network;
