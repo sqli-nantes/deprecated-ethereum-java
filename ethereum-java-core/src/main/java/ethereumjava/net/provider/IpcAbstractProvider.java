@@ -1,15 +1,16 @@
 package ethereumjava.net.provider;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import ethereumjava.exception.EthereumJavaException;
 import ethereumjava.net.Request;
 import ethereumjava.net.Response;
 import rx.Observable;
 import rx.Subscriber;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.List;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Created by gunicolas on 31/08/16.
@@ -52,46 +53,61 @@ public abstract class IpcAbstractProvider extends AbstractProvider {
     }
 
     private void startListening() throws EthereumJavaException {
-        listeningThread = new Thread(new Runnable() {
+
+        Observable.interval(500, TimeUnit.MILLISECONDS) //Thread computation
+                .map(readFile())
+                .filter(removeNullLines())
+                .subscribe(manageResponse());
+    }
+
+    private Action1<String> manageResponse() {
+        return new Action1<String>() {
+           @Override
+           public void call(String line) {
+               Response response = gson.fromJson(line, Response.class);
+
+               if (response.request != null) {
+
+                   List<Subscriber> subscribers = response.request.getSubscribers();
+                   if (response.isError()) {
+                       for (Subscriber subscriber : subscribers) {
+                           subscriber.onError(new EthereumJavaException(response.error.message));
+                       }
+                   } else {
+                       for (Subscriber subscriber : subscribers) {
+                           subscriber.onNext(response.result);
+                           subscriber.onCompleted();
+                       }
+                   }
+                   requestQueue.remove(response.id);
+               }
+           }
+       };
+    }
+    private Func1<String, Boolean> removeNullLines() {
+        return new Func1<String, Boolean>() {
             @Override
-            public void run() {
+            public Boolean call(String s) {
+                return s == null;
+            }
+        };
+    }
+    private Func1<Long,String> readFile(){
+        return new Func1<Long, String>() {
+            @Override
+            public String call(Long aLong) {
                 try {
-                    listen = true;
-                    while (listen) {
-                        try {
-                            String line;
-                            while (in.ready() && (line = in.readLine()) != null) {
-                                Response response = gson.fromJson(line, Response.class);
-
-                                if (response.request != null) {
-
-                                    List<Subscriber> subscribers = response.request.getSubscribers();
-                                    if (response.isError()) {
-                                        for (Subscriber subscriber : subscribers) {
-                                            subscriber.onError(new EthereumJavaException(response.error.message));
-                                        }
-                                    } else {
-                                        for (Subscriber subscriber : subscribers) {
-                                            subscriber.onNext(response.result);
-                                            subscriber.onCompleted();
-                                        }
-                                    }
-                                    requestQueue.remove(response.id);
-
-                                } // else just ignored
-                            }
-                        }catch(Exception e ){
-                            throw new EthereumJavaException(e);
-                        }
-                        Thread.sleep(500);
+                    if( ! in.ready() ){
+                        return null;
+                    } else {
+                        String line = in.readLine();
+                        return line;
                     }
-                }
-                catch(Exception e){
+                } catch (IOException e) {
                     throw new EthereumJavaException(e);
                 }
             }
-        });
-        listeningThread.start();
+        };
     }
 
     @Override
