@@ -10,10 +10,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import rx.Observable;
-import rx.Scheduler;
-import rx.Subscriber;
-import rx.observers.TestSubscriber;
-import rx.schedulers.Schedulers;
 
 import java.math.BigInteger;
 
@@ -35,7 +31,7 @@ public class ContractTest {
 
     final String PASSWORD = "toto";
 
-    ChoupetteContract choupetteContract;
+    TestContract contract;
 
     @Before
     public void setup() throws Exception{
@@ -44,7 +40,7 @@ public class ContractTest {
                 .build();
 
         ethereumJava.personal.unlockAccount(ACCOUNT,PASSWORD,3600);
-        choupetteContract = (ChoupetteContract) ethereumJava.contract.withAbi(ChoupetteContract.class).at(CONTRACT_ADDRESS);
+        contract = ethereumJava.contract.withAbi(TestContract.class).at(CONTRACT_ADDRESS);
     }
 
 
@@ -53,7 +49,7 @@ public class ContractTest {
         ethereumJava.close();
     }
 
-    interface ChoupetteContract extends ContractType {
+    interface TestContract extends ContractType {
 
         @SolidityEvent.Anonymous(false)
         @SolidityEvent.Parameters({
@@ -84,28 +80,28 @@ public class ContractTest {
     @Test
     public void testContractRentMe() throws Exception{
 
-        Hash txHash = choupetteContract.RentMe().sendTransaction(ACCOUNT, new BigInteger("90000"));
+        Hash txHash = contract.RentMe().sendTransaction(ACCOUNT, new BigInteger("90000"));
         assertTrue(txHash!=null);
     }
 
     @Test
     public void testContractStopRent() throws Exception{
 
-        Hash txHash = choupetteContract.StopRent().sendTransaction(ACCOUNT, new BigInteger("90000"));
+        Hash txHash = contract.StopRent().sendTransaction(ACCOUNT, new BigInteger("90000"));
         assertTrue(txHash!=null);
     }
 
     @Test
     public void testContractStartRent() throws Exception{
 
-        Hash txHash = choupetteContract.StartRent().sendTransaction(ACCOUNT, new BigInteger("90000"), SolidityUtils.toWei("1","ether").toBigInteger());
+        Hash txHash = contract.StartRent().sendTransaction(ACCOUNT, new BigInteger("90000"), SolidityUtils.toWei("1","ether").toBigInteger());
         assertTrue(txHash!=null);
     }
 
     @Test
     public void testContractValidateTravel() throws Exception{
 
-        Hash txHash = choupetteContract.ValidateTravel().sendTransaction(ACCOUNT, new BigInteger("90000"));
+        Hash txHash = contract.ValidateTravel().sendTransaction(ACCOUNT, new BigInteger("90000"));
         assertTrue(txHash!=null);
 
     }
@@ -113,7 +109,7 @@ public class ContractTest {
     @Test
     public void testContractGoTo() throws Exception{
 
-        Hash txHash = choupetteContract
+        Hash txHash = contract
                 .GoTo(  SUInt.fromBigInteger256(BigInteger.valueOf(3)),
                         SUInt.fromBigInteger256(BigInteger.valueOf(2)))
                 .sendTransaction(ACCOUNT, new BigInteger("90000"));
@@ -125,7 +121,7 @@ public class ContractTest {
     @Test
     public void testContractGetPrice() throws Exception{
 
-        SUInt.SUInt256 response = (SUInt.SUInt256) choupetteContract.GetPrice().call();
+        SUInt.SUInt256 response = (SUInt.SUInt256) contract.GetPrice().call();
         assertEquals(new BigInteger("1000000"),response.get());
 
     }
@@ -134,7 +130,7 @@ public class ContractTest {
     @Test
     public void testContractOnStateChanged() throws Exception{
 
-        Observable<Transaction> obsTransac = choupetteContract.RentMe().sendTransactionAndGetMined(ACCOUNT, new BigInteger("90000"));
+        Observable<Transaction> obsTransac = contract.RentMe().sendTransactionAndGetMined(ACCOUNT, new BigInteger("90000"));
 
 
 
