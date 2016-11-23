@@ -9,6 +9,7 @@ import rx.Observable;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
 
 /**
  * Created by gunicolas on 23/08/16.
@@ -43,21 +44,22 @@ public interface  Eth {
     @EthereumMethod(name="sendTransaction")
     Observable<Hash> sendTransactionAsync(TransactionRequest request);
 
-//    Observable<Transaction> sendTransctionAndGetMined(TransactionRequest request);
-
     String call(TransactionRequest request,String callOnBlock);
 
     Observable<String> newFilter(FilterOptions options);
     Observable<String> newBlockFilter();
 
-
-
-
     @EthereumMethod(name="getFilterLogs")
     Observable<Log[]> getFilterLogs(String filterId);
 
+    /**
+     * Polling method for a filter, which returns an array of logs which occurred since last poll.
+     * @param filterId filter id got with eth.newFilter()
+     * @param <T> returned log object type. Differs when it's a BlockFilter (Hash) or a DefaultFilter (Log)
+     * @return an observable of List of T objects. Logs of changes since last poll
+     */
     @EthereumMethod(name="getFilterChanges")
-    Observable<Object> getFilterChanges(String filterId);
+    <T> Observable<List<T>> getFilterChanges(String filterId);
 
     Observable uninstallFilter(String filterId);
 

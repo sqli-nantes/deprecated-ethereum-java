@@ -115,7 +115,7 @@ public class EthereumJava {
                 result = requestResult;
             } else if( requestResult != null ){
                 try {
-                    result = requestResult.toBlocking().single();
+                    result = requestResult.toBlocking().single(); //TODO subscribeOn (thread current) / observeOn (pool thread)
                 }catch(NoSuchElementException e ){
                     throw new EthereumJavaException(e);
                 }

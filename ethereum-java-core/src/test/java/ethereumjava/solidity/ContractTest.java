@@ -7,15 +7,16 @@ import ethereumjava.net.provider.RpcProvider;
 import ethereumjava.solidity.types.SUInt;
 import ethereumjava.solidity.types.SVoid;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import rx.Observable;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import java.math.BigInteger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
 
 /**
  * Created by gunicolas on 30/08/16.
@@ -25,10 +26,8 @@ public class ContractTest {
 
     EthereumJava ethereumJava;
 
-
-    final String ACCOUNT = "0xa9d28b5d7688fab363a3304992e48966118a4b8d";
-    final String CONTRACT_ADDRESS = "0x10d92052e9ef32e8074bbd319ca3c30c4204b6de";
-
+    String coinbase;
+    final String CONTRACT_ADDRESS = "0xf673d7d1d6f8b8104d01843cd7fa7a8a272115d9";
     final String PASSWORD = "toto";
 
     TestContract contract;
@@ -38,9 +37,9 @@ public class ContractTest {
         ethereumJava = new EthereumJava.Builder()
                 .provider(new RpcProvider("http://localhost:8547"))
                 .build();
-
-        ethereumJava.personal.unlockAccount(ACCOUNT,PASSWORD,3600);
-        contract = ethereumJava.contract.withAbi(TestContract.class).at(CONTRACT_ADDRESS);
+        coinbase = ethereumJava.personal.listAccounts().get(0);
+        ethereumJava.personal.unlockAccount(coinbase,PASSWORD,3600);
+        contract =  ethereumJava.contract.withAbi(TestContract.class).at(CONTRACT_ADDRESS);
     }
 
 
@@ -58,52 +57,47 @@ public class ContractTest {
         SolidityEvent<SUInt.SUInt256> OnStateChanged();
 
         @SolidityFunction.ReturnType(SVoid.class)
-        SolidityFunction RentMe();
+        SolidityFunction<SVoid> RentMe();
 
         @SolidityFunction.ReturnType(SVoid.class)
-        SolidityFunction StopRent();
+        SolidityFunction<SVoid> StopRent();
 
         @SolidityFunction.ReturnType(SVoid.class)
-        SolidityFunction StartRent();
+        SolidityFunction<SVoid> StartRent();
 
         @SolidityFunction.ReturnType(SVoid.class)
-        SolidityFunction ValidateTravel();
+        SolidityFunction<SVoid> ValidateTravel();
 
         @SolidityFunction.ReturnType(SVoid.class)
-        SolidityFunction GoTo(SUInt.SUInt256 x, SUInt.SUInt256 y);
+        SolidityFunction<SVoid> GoTo(SUInt.SUInt256 x, SUInt.SUInt256 y);
         @SolidityFunction.ReturnType(SUInt.SUInt256.class)
-        SolidityFunction GetPrice();
+        SolidityFunction<SUInt.SUInt256> GetPrice();
 
 
     }
 
     @Test
     public void testContractRentMe() throws Exception{
-
-        Hash txHash = contract.RentMe().sendTransaction(ACCOUNT, new BigInteger("90000"));
-        assertTrue(txHash!=null);
+        Hash txHash = contract.RentMe().sendTransaction(coinbase, new BigInteger("90000"));
+        Assert.assertTrue(txHash!=null);
     }
 
     @Test
     public void testContractStopRent() throws Exception{
-
-        Hash txHash = contract.StopRent().sendTransaction(ACCOUNT, new BigInteger("90000"));
-        assertTrue(txHash!=null);
+        Hash txHash = contract.StopRent().sendTransaction(coinbase, new BigInteger("90000"));
+        Assert.assertTrue(txHash!=null);
     }
 
     @Test
     public void testContractStartRent() throws Exception{
-
-        Hash txHash = contract.StartRent().sendTransaction(ACCOUNT, new BigInteger("90000"), SolidityUtils.toWei("1","ether").toBigInteger());
-        assertTrue(txHash!=null);
+        Hash txHash = contract.StartRent().sendTransaction(coinbase, new BigInteger("90000"), SolidityUtils.toWei("1","ether").toBigInteger());
+        Assert.assertTrue(txHash!=null);
     }
 
     @Test
     public void testContractValidateTravel() throws Exception{
-
-        Hash txHash = contract.ValidateTravel().sendTransaction(ACCOUNT, new BigInteger("90000"));
-        assertTrue(txHash!=null);
-
+        Hash txHash = contract.ValidateTravel().sendTransaction(coinbase, new BigInteger("90000"));
+        Assert.assertTrue(txHash!=null);
     }
 
     @Test
@@ -112,36 +106,31 @@ public class ContractTest {
         Hash txHash = contract
                 .GoTo(  SUInt.fromBigInteger256(BigInteger.valueOf(3)),
                         SUInt.fromBigInteger256(BigInteger.valueOf(2)))
-                .sendTransaction(ACCOUNT, new BigInteger("90000"));
+                .sendTransaction(coinbase, new BigInteger("90000"));
 
-        assertTrue(txHash!=null);
+        Assert.assertTrue(txHash!=null);
 
     }
 
     @Test
     public void testContractGetPrice() throws Exception{
-
         SUInt.SUInt256 response = (SUInt.SUInt256) contract.GetPrice().call();
-        assertEquals(new BigInteger("1000000"),response.get());
+        Assert.assertEquals(new BigInteger("1000000"),response.get());
 
     }
-
 
     @Test
     public void testContractOnStateChanged() throws Exception{
 
-        Observable<Transaction> obsTransac = contract.RentMe().sendTransactionAndGetMined(ACCOUNT, new BigInteger("90000"));
-
-
-
-
-
-
-        Transaction tx = obsTransac.toBlocking().first();
-        assertNotNull(tx);
-
-
-
+        Observable<Transaction> obs = contract.RentMe().sendTransactionAndGetMined(coinbase, new BigInteger("90000"));
+        obs .subscribeOn(Schedulers.computation())
+            .observeOn(Schedulers.immediate())
+            .subscribe(new Action1<Transaction>() {
+                @Override
+                public void call(Transaction transaction) {
+                    Assert.assertNotNull(transaction);
+                }
+            });
     }
 
 }
