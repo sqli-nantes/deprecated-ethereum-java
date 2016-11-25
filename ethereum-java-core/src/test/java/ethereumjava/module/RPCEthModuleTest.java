@@ -1,18 +1,13 @@
 package ethereumjava.module;
 
-import ethereumjava.config.Config;
 import ethereumjava.config.RPCTest;
-import ethereumjava.exception.EthereumJavaException;
 import ethereumjava.module.objects.Block;
 import ethereumjava.module.objects.Hash;
 import ethereumjava.module.objects.Transaction;
 import ethereumjava.module.objects.TransactionFormat;
-import org.junit.Assert;
 import org.junit.Test;
-import rx.Observable;
 import rx.observers.TestSubscriber;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -105,7 +100,7 @@ public class RPCEthModuleTest extends RPCTest {
     }
 
     private void testBalance(BigInteger balance){
-        assertTrue(balance.toString().compareTo("100000000000000000000000000000")==0);
+        assertTrue(balance.toString().compareTo("100000000005000000000000000000")==0);
     }
 
 }
