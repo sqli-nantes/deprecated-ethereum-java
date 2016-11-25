@@ -111,7 +111,7 @@ public class ContractTest extends RPCTest{
     public void onStateChangedTest() throws Exception{
 
         TestSubscriber testSubscriber = new TestSubscriber();
-        contract.OnStateChanged().watch().subscribe(testSubscriber);
+        contract.OnStateChanged().watch().first().subscribe(testSubscriber);
 
         Config.TestAccount testAccount = config.accounts.get(1);
         boolean unlocked = ethereumJava.personal.unlockAccount(testAccount.id,testAccount.password,3600);
@@ -124,7 +124,8 @@ public class ContractTest extends RPCTest{
 
         testSubscriber.assertNoErrors();
         List<SUInt.SUInt256> states = testSubscriber.getOnNextEvents();
-        System.out.println(states);
+        int state = states.get(0).get().intValue();
+        Assert.assertTrue(state==1);
     }
 
     @Test
