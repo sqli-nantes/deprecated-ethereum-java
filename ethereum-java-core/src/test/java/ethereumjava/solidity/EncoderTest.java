@@ -238,19 +238,19 @@ public class EncoderTest {
             Test test = gson.fromJson(s,Test.class);
             Object input = null;
             if( test.type.compareTo("SBool") == 0 ){
-                if( !isComplexType(test.type) )
-                    input = SBool.fromBoolean(test.value.getAsBoolean());
-                else
+//                if( !isComplexType(test.type) )
+//                    input = SBool.fromBoolean(test.value.getAsBoolean());
+//                else
                     input = null; //TODO it's a complex type
             } else if( test.type.compareTo("SString") == 0 ){
-                if( !isComplexType(test.type) )
-                    input = SString.fromString(test.value.getAsString());
-                else
+//                if( !isComplexType(test.type) )
+//                    input = SString.fromString(test.value.getAsString());
+//                else
                     input = null; //TODO it's a complex type
             } else if( test.type.compareTo("SAddress") == 0  ){
-                if( !isComplexType(test.type) )
-                    input = SAddress.fromString(test.value.getAsString());
-                else
+//                if( !isComplexType(test.type) )
+//                    input = SAddress.fromString(test.value.getAsString());
+//                else
                     input = null; //TODO it's a complex type
             } else if( test.type.contains("SInt") ){
                 if( !isComplexType(test.type) ) {
