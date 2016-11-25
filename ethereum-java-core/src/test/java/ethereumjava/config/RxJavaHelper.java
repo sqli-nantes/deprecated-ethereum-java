@@ -11,6 +11,6 @@ public abstract class RxJavaHelper {
 
 
     public static void waitTerminalEvent(TestSubscriber subscriber){
-        subscriber.awaitTerminalEvent(2, TimeUnit.SECONDS);
+        subscriber.awaitTerminalEvent(5,TimeUnit.SECONDS);
     }
 }
