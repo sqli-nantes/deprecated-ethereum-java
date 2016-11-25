@@ -55,7 +55,7 @@ public abstract class SUInt<T> extends SType<T> {
         return false;
     }
 
-    public static class SUInt8<Short> extends SUInt {
+    public static class SUInt8 extends SUInt<Short> {
         private SUInt8(Short value) {
             super(value);
         }
@@ -63,7 +63,7 @@ public abstract class SUInt<T> extends SType<T> {
             return Pattern.compile("^uint8(\\[([0-9])*\\])*$").matcher(name).matches();
         }
     }
-    public static class SUInt16<Integer> extends SUInt {
+    public static class SUInt16 extends SUInt<Integer> {
         private SUInt16(Integer value) {
             super(value);
         }
@@ -71,23 +71,23 @@ public abstract class SUInt<T> extends SType<T> {
             return Pattern.compile("^uint16(\\[([0-9])*\\])*$").matcher(name).matches();
         }
     }
-    public static class SUInt32<Long> extends SUInt {
+    public static class SUInt32 extends SUInt<Long> {
         public SUInt32(Long value) {
             super(value);
         }
     }
-    public static class SUInt64<BigInteger> extends SUInt {
+    public static class SUInt64 extends SUInt<BigInteger> {
 
         public SUInt64(BigInteger value) {
             super(value);
         }
     }
-    public static class SUInt128<BigInteger> extends SUInt {
+    public static class SUInt128 extends SUInt<BigInteger> {
         public SUInt128(BigInteger value) {
             super(value);
         }
     }
-    public static class SUInt256<BigInteger> extends SUInt {
+    public static class SUInt256 extends SUInt<BigInteger> {
         public SUInt256(BigInteger value) {
             super(value);
         }
