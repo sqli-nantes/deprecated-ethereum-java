@@ -11,18 +11,8 @@ import java.util.List;
 
 public class DefaultFilter extends AbstractFilter<Log> {
 
-    FilterOptions options;
-
     public DefaultFilter(FilterOptions options, Eth eth) {
-
         super(eth);
-
-        this.options = options;
-
-    }
-
-    @Override
-    Observable<String> createFilter() {
-        return eth.newFilter(options);
+        this.filterId = eth.newFilter(options).toBlocking().first();
     }
 }

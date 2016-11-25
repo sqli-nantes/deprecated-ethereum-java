@@ -29,17 +29,22 @@ public abstract class AbstractFilter<T> {
     public AbstractFilter(Eth eth) {
         this.eth = eth;
         this.filterCallbacks = new ArrayList<>();
-
-        filterId = createFilter().toBlocking().first();
     }
-
-    abstract Observable<String> createFilter();
-
 
     public Observable<T> watch(){
         return Observable.interval(POLLING_TIMEOUT,TimeUnit.MILLISECONDS)
                 .flatMap(getFilterChanges())
+                .filter(nonEmptyList())
                 .flatMap(fromListToElement());
+    }
+
+    private Func1<List<T>, Boolean> nonEmptyList() {
+        return new Func1<List<T>, Boolean>() {
+            @Override
+            public Boolean call(List<T> ts) {
+                return ts.size()>0;
+            }
+        };
     }
 
     private Func1<List<T>, Observable<T>> fromListToElement() {

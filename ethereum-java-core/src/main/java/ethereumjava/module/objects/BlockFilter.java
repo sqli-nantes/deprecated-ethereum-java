@@ -12,14 +12,9 @@ import java.util.List;
 //String generic type is the new block hashes since last poll
 public class BlockFilter extends AbstractFilter<String> {
 
-
     public BlockFilter(Eth eth) {
         super(eth);
-    }
-
-    @Override
-    Observable<String> createFilter() {
-        return eth.newBlockFilter();
+        filterId = eth.newBlockFilter().toBlocking().first();
     }
 
 }
