@@ -88,7 +88,7 @@ public abstract class IpcAbstractProvider extends AbstractProvider {
         return new Func1<String, Boolean>() {
             @Override
             public Boolean call(String s) {
-                return s == null;
+                return s != null;
             }
         };
     }
