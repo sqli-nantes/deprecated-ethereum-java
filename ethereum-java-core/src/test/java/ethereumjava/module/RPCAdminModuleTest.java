@@ -42,7 +42,7 @@ public class RPCAdminModuleTest extends RPCTest {
         assertNotNull(nodeInfo);
         assertTrue(nodeInfo.ip.compareTo(config.ethAddr)==0);
         assertTrue(nodeInfo.listenAddr.compareTo("["+config.ethAddr +"]:"+config.ethPort)==0);
-        assertTrue(nodeInfo.ports.discovery == config.ethPort);
+        assertTrue(nodeInfo.ports.discovery == 0);
         assertTrue(nodeInfo.ports.listener == config.ethPort);
         assertTrue(nodeInfo.protocols.eth.network == config.networkId);
     }
