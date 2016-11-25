@@ -11,11 +11,14 @@ import org.junit.Before;
 public class RPCTest {
 
     protected EthereumJava ethereumJava;
+    protected Config config;
 
     @Before
-    public void setup() throws Exception{
+    public void setUp() throws Exception{
+        config = Config.newInstance();
+
         ethereumJava = new EthereumJava.Builder()
-                .provider(new RpcProvider("http://"+Config.RPC_PROVIDER_ADDR+":"+Config.RPC_PROVIDER_PORT))
+                .provider(new RpcProvider("http://"+config.rpcProviderAddr +":"+config.rpcProviderPort))
                 .build();
     }
 

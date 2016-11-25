@@ -1,12 +1,9 @@
 package ethereumjava.module;
 
-import ethereumjava.config.Config;
 import ethereumjava.config.RPCTest;
-import ethereumjava.config.RxJavaHelper;
 import ethereumjava.exception.EthereumJavaException;
 import ethereumjava.module.objects.NodeInfo;
 import ethereumjava.module.objects.Peer;
-import org.junit.Assert;
 import org.junit.Test;
 import rx.Observable;
 import rx.observers.TestSubscriber;
@@ -43,12 +40,11 @@ public class RPCAdminModuleTest extends RPCTest {
 
     private void testNodeInfo(NodeInfo nodeInfo){
         assertNotNull(nodeInfo);
-        assertTrue(nodeInfo.ip.compareTo(Config.ETH_ADDR)==0);
-        assertTrue(nodeInfo.listenAddr.compareTo("["+Config.ETH_ADDR+"]:"+Config.ETH_PORT)==0);
-        assertTrue(nodeInfo.ports.discovery == Config.ETH_PORT);
-        assertTrue(nodeInfo.ports.listener == Config.ETH_PORT);
-        assertTrue(nodeInfo.protocols.eth.network == Config.NETWORK_ID);
-        assertTrue(nodeInfo.protocols.eth.difficulty.compareTo(Config.DIFFICULTY)==0);
+        assertTrue(nodeInfo.ip.compareTo(config.ethAddr)==0);
+        assertTrue(nodeInfo.listenAddr.compareTo("["+config.ethAddr +"]:"+config.ethPort)==0);
+        assertTrue(nodeInfo.ports.discovery == config.ethPort);
+        assertTrue(nodeInfo.ports.listener == config.ethPort);
+        assertTrue(nodeInfo.protocols.eth.network == config.networkId);
     }
 
     @Test
@@ -72,7 +68,6 @@ public class RPCAdminModuleTest extends RPCTest {
     @Test
     public void peersTest() throws Exception{
         List<Peer> peers = ethereumJava.admin.peers();
-
         testPeers(peers);
     }
 

@@ -5,11 +5,10 @@ function checkWork() {
         miner.start();
     } else {
         miner.stop();
-        console.log("== No transactions! Mining stopped.");
     }
 }
 
-eth.filter("latest", function(err, block) { checkWork(); });
-eth.filter("pending", function(err, block) { checkWork(); });
-
-checkWork();
+while(true){
+	checkWork();
+	admin.sleep(0.5);
+}

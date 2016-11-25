@@ -1,18 +1,52 @@
 package ethereumjava.config;
 
+import com.google.gson.Gson;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.List;
+
 /**
  * Created by gunicolas on 22/11/16.
  */
 public final class Config {
 
-    public static final int RPC_PROVIDER_PORT = 8547;
-    public static final String RPC_PROVIDER_ADDR = "localhost";
-    public static final String ACCOUNT0_PASSWORD = "admin";
-    public static final String ETH_ADDR = "::";
-    public static final int ETH_PORT = 30303;
-    public static final int NETWORK_ID = 100;
-    public static final String DIFFICULTY = "5242880";
+    private static final String PATH = "src/test/resources/config.json";
 
+    public int rpcProviderPort;
+    public String rpcProviderAddr;
+    public String ethAddr;
+    public int ethPort;
+    public int networkId;
+    public String difficulty;
+    public String contractAddress;
 
+    public List<TestAccount> accounts;
 
+    public class TestAccount {
+        public String id;
+        public String password;
+    }
+
+    private static Config INSTANCE;
+
+    private Config(int rpcProviderPort, String rpcProviderAddr, String ethAddr, int ethPort, int networkId, String difficulty, String contractAddress, List<TestAccount> accounts) {
+        this.rpcProviderPort = rpcProviderPort;
+        this.rpcProviderAddr = rpcProviderAddr;
+        this.ethAddr = ethAddr;
+        this.ethPort = ethPort;
+        this.networkId = networkId;
+        this.difficulty = difficulty;
+        this.contractAddress = contractAddress;
+        this.accounts = accounts;
+    }
+
+    public static Config newInstance() throws FileNotFoundException {
+        if( INSTANCE == null ){
+            FileReader reader = new FileReader(PATH);
+            Gson deserializer = new Gson();
+            INSTANCE = deserializer.fromJson(reader,Config.class);
+        }
+        return INSTANCE;
+    }
 }
