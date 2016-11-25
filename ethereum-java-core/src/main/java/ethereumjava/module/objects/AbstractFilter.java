@@ -60,10 +60,12 @@ public abstract class AbstractFilter<T> {
         return new Func1<Long, Observable<List<T>>>() {
             @Override
             public  Observable<List<T>> call(Long l) {
-                return eth.getFilterChanges(filterId);
+                return eth.getFilterChanges(filterId,getLogType());
             }
         };
     }
+
+    protected abstract Class<T> getLogType();
 
     public Observable stopWatching(){
         this.pollingThread.interrupt();

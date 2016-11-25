@@ -17,4 +17,9 @@ public class BlockFilter extends AbstractFilter<String> {
         filterId = eth.newBlockFilter().toBlocking().first();
     }
 
+    @Override
+    protected Class<String> getLogType() {
+        return String.class;
+    }
+
 }

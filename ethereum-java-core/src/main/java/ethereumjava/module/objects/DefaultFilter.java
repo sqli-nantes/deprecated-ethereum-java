@@ -15,4 +15,9 @@ public class DefaultFilter extends AbstractFilter<Log> {
         super(eth);
         this.filterId = eth.newFilter(options).toBlocking().first();
     }
+
+    @Override
+    protected Class<Log> getLogType() {
+        return Log.class;
+    }
 }

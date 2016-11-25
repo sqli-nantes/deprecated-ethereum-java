@@ -2,12 +2,12 @@ package ethereumjava.module;
 
 import ethereumjava.module.annotation.ConvertParam;
 import ethereumjava.module.annotation.EthereumMethod;
+import ethereumjava.module.annotation.ExcludeFromRequest;
 import ethereumjava.module.annotation.GenericTypeIndex;
 import ethereumjava.module.converter.GetBlockClassConverter;
 import ethereumjava.module.objects.*;
 import rx.Observable;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -59,7 +59,8 @@ public interface  Eth {
      * @return an observable of List of T objects. Logs of changes since last poll
      */
     @EthereumMethod(name="getFilterChanges")
-    <T> Observable<List<T>> getFilterChanges(String filterId);
+    @GenericTypeIndex(1)
+    <T> Observable<List<T>> getFilterChanges(String filterId,@ExcludeFromRequest Class<T> logType);
 
     Observable uninstallFilter(String filterId);
 

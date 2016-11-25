@@ -4,8 +4,12 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 
+import ethereumjava.module.annotation.ExcludeFromRequest;
 import rx.Observable;
 import ethereumjava.exception.EthereumJavaException;
 import ethereumjava.module.Admin;
@@ -76,7 +80,9 @@ public class EthereumJava {
 
             Type returnType = Utils.extractReturnType(method,args); //Must extract from originial parameters (next instruction convert these parameters)
 
-            args = convertArgumentsIfNecessary(method,args);
+            if( args != null ){
+                args = convertArgumentsIfNecessary(method,args);
+            }
             String formattedArgs = Utils.formatArgsToString(args);
             String moduleName = method.getDeclaringClass().getSimpleName().toLowerCase();
             String methodName = "_"+Utils.extractMethodName(method);
@@ -90,15 +96,18 @@ public class EthereumJava {
         }
 
         private Object[] convertArgumentsIfNecessary(Method method, Object[] args) {
+            List<Object> arguments = new ArrayList<>(Arrays.asList(args));
             int i=0;
-            for(Annotation[] annotations : method.getParameterAnnotations()){
-                if( annotations.length > 0 ){
-                    Annotation annotation = annotations[0];
-                    if( annotation.annotationType().isAssignableFrom(ConvertParam.class) ){
+            for(Annotation[] parameter : method.getParameterAnnotations()){
+                List<Annotation> parameterAnnotations = Arrays.asList(parameter);
+                for( Annotation annotation : parameterAnnotations ) {
+                    if (annotation.annotationType().isAssignableFrom(ExcludeFromRequest.class)) {
+                        arguments.remove(i);
+                    } else if (annotation.annotationType().isAssignableFrom(ConvertParam.class)) {
                         ConvertParam convertParamAnnotation = (ConvertParam) annotation;
                         try {
                             ParameterConverter parameterConverter = convertParamAnnotation.with().newInstance();
-                            args[i] = parameterConverter.convertFrom(args[i]);
+                            arguments.set(i, parameterConverter.convertFrom(args[i]));
                         } catch (InstantiationException | IllegalAccessException e) {
                             throw new EthereumJavaException(e);
                         }
@@ -106,7 +115,7 @@ public class EthereumJava {
                 }
                 i++;
             }
-            return args;
+            return arguments.toArray();
         }
 
         private <T> Object convertToSyncIfNecessary(Observable<T> requestResult, Method method) throws EthereumJavaException {
