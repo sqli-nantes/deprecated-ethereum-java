@@ -105,7 +105,7 @@ public class SolidityFunction<T extends SType> extends SolidityElement{
             .watch()
             .flatMap(getBlockFromHash())
             .flatMap(getTransactionsOfBlock())
-            .filter(keepGivenTransaction(txHash));
+            .first(keepGivenTransaction(txHash));
     }
 
     private Func1<Transaction, Boolean> keepGivenTransaction(final Hash txHash) {
