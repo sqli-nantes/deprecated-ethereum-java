@@ -433,8 +433,6 @@ public class DecoderTest {
     return null;
     }
 
-    @org.junit.Test
-    @Parameters
     public void testEncoderSimpleType(Object param,String expected) throws Exception{
 
     }
