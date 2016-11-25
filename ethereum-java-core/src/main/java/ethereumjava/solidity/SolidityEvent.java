@@ -85,8 +85,8 @@ public class SolidityEvent<T> extends SolidityElement{
     public Observable<T> watch(){
 
         FilterOptions options = encode();
-        new DefaultFilter(options,eth);
-        return defaultFilter.watch()
+        return new DefaultFilter(options,eth)
+                .watch()
                 .map(decodeLog());
     }
 
