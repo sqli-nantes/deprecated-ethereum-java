@@ -22,7 +22,14 @@
 
   "files":
   [
-    {"includePattern": "ethereum-java-sample/build/libs/(.*)", "uploadPattern": "/snapshots/$1"}
+    {"includePattern": "ethereum-java-sample/build/libs/(.*)",
+      "uploadPattern": "/snapshots/$1",
+      "matrixParams": {"override": 1 }
+    },
+    {"includePattern": "ethereum-java-core/build/libs/(.*)",
+      "uploadPattern": "/snapshots/samples/$1",
+      "matrixParams": {"override": 1 }
+    }
   ],
   "publish": true
 }
