@@ -15,7 +15,6 @@
 
   "version": {
     "name": "snapshot-__datenow__",
-    "released": "__datenow__",
     "vcs_tag": "snapshot-__datenow__",
     "gpgSign": false
   },
