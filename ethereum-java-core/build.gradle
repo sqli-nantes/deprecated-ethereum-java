@@ -6,6 +6,10 @@ buildscript {
     }
 }
 
+assemble.doLast {
+    file('build/libs/ethereum-java-core.jar').renameTo("ethereum-java-core/build/libs/ethereum-java-core-dailybuild-${(new Date()).format('yyyyMMddHHmm')}.jar")
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '3.1'
 }
@@ -23,7 +27,6 @@ dependencies {
 
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
-
 }
 
 sourceSets {
@@ -33,3 +36,4 @@ sourceSets {
         }
     }
 }
+

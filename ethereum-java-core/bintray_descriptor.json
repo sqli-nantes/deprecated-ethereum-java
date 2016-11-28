@@ -1,0 +1,28 @@
+{
+  "package": {
+    "name": "ethereum-java",
+    "repo": "ethereum-java",
+    "subject": "sqli-nantes",
+    "desc": "I was pushed automatically from Travis-CI",
+    "vcs_url": "https://github.com/sqli-nantes/ethereum-java/",
+    "github_use_tag_release_notes": true,
+    "github_release_notes_file": "RELEASE.txt",
+    "licenses": ["MIT"],
+    "labels": ["blockchain", "ethereum", "java"],
+    "public_download_numbers": false,
+    "public_stats": false
+  },
+
+  "version": {
+    "name": "snapshot",
+    "released": "snapshot",
+    "vcs_tag": "snapshot",
+    "gpgSign": false
+  },
+
+  "files":
+  [
+    {"includePattern": "ethereum-java-core/build/libs/(.*)", "uploadPattern": "/snapshots/$1"}
+  ],
+  "publish": true
+}
