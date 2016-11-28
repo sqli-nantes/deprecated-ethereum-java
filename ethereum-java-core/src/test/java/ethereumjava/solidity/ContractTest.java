@@ -33,6 +33,7 @@ public class ContractTest extends RPCTest{
     public void setUp() throws Exception{
         super.setUp();
         testAccount = config.accounts.get(1);
+        ethereumJava.personal.unlockAccount(testAccount.id,testAccount.password,3600);
         contract =  ethereumJava.contract.withAbi(TestContract.class).at(config.contractAddress);
     }
 
@@ -113,12 +114,7 @@ public class ContractTest extends RPCTest{
         TestSubscriber testSubscriber = new TestSubscriber();
         contract.OnStateChanged().watch().first().subscribe(testSubscriber);
 
-        Config.TestAccount testAccount = config.accounts.get(1);
-        boolean unlocked = ethereumJava.personal.unlockAccount(testAccount.id,testAccount.password,3600);
-
-        if( unlocked ) {
-            contract.RentMe().sendTransaction(testAccount.id, new BigInteger("90000"));
-        }
+        contract.RentMe().sendTransaction(testAccount.id, new BigInteger("90000"));
 
         testSubscriber.awaitTerminalEvent();
 
@@ -132,23 +128,15 @@ public class ContractTest extends RPCTest{
     public void sendTransactionAndGetMinedTest() throws Exception{
         TestSubscriber testSubscriber = new TestSubscriber();
 
-        Config.TestAccount testAccount = config.accounts.get(1);
-        boolean unlocked = ethereumJava.personal.unlockAccount(testAccount.id,testAccount.password,3600);
+        Observable<Transaction> obs = contract.RentMe().sendTransactionAndGetMined(testAccount.id, new BigInteger("90000"));
+        obs.subscribe(testSubscriber);
 
-        if( unlocked ) {
-            Observable<Transaction> obs = contract.RentMe().sendTransactionAndGetMined(testAccount.id, new BigInteger("90000"));
-            obs.subscribe(testSubscriber);
+        testSubscriber.awaitTerminalEvent();
 
-            testSubscriber.awaitTerminalEvent();
-
-            testSubscriber.assertCompleted();
-            testSubscriber.assertNoErrors();
-            testSubscriber.assertValueCount(1);
-            assertTrue(testSubscriber.getOnNextEvents().get(0) != null);
-        }
-        else{
-            fail("test account 1 ("+testAccount.id+") must be unlocked ("+testAccount.password+") for the test");
-        }
+        testSubscriber.assertCompleted();
+        testSubscriber.assertNoErrors();
+        testSubscriber.assertValueCount(1);
+        assertTrue(testSubscriber.getOnNextEvents().get(0) != null);
 
     }
 
