@@ -4,6 +4,8 @@ jdk:
 - openjdk7
 script:
 - "./gradlew assemble"
+before_deploy:
+  - ./before_deploy.sh
 deploy:
   provider: bintray
   file: bintray_descriptor.json

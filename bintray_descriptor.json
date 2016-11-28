@@ -14,10 +14,9 @@
   },
 
   "version": {
-    "file_glob": true,
-    "name": "${datenow}",
-    "released": "snapshot",
-    "vcs_tag": "snapshot",
+    "name": "snapshot-__datenow__",
+    "released": "__datenow__",
+    "vcs_tag": "snapshot-__datenow__",
     "gpgSign": false
   },
 
