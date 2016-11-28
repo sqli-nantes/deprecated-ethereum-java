@@ -1,10 +1,8 @@
-
 apply plugin: 'java'
-
-
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(include: ['*.jar'], dir: '../ethereum-java-core/build/libs')
     testCompile 'junit:junit:4.12'
     compile project(':ethereum-java-core')
 }
@@ -12,3 +10,4 @@ dependencies {
 task wrapper(type: Wrapper) {
     gradleVersion = '3.1'
 }
+
