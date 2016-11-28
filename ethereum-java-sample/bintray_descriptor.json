@@ -22,7 +22,6 @@
 
   "files":
   [
-    {"includePattern": "ethereum-java-core/build/libs/(.*)", "uploadPattern": "/snapshots/$1"},
     {"includePattern": "ethereum-java-sample/build/libs/(.*)", "uploadPattern": "/snapshots/$1"}
   ],
   "publish": true
