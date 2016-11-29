@@ -22,7 +22,7 @@
   "files":
   [
     {"includePattern": "ethereum-java-core/build/libs/(.*)",
-      "uploadPattern": "/snapshots/ethereum-java-core/daylybuild-__datenow__/$1",
+      "uploadPattern": "/snapshots/ethereum-java-core/dailybuild-__datenow__/$1",
       "matrixParams": {"override": 1 }
     }
   ],
