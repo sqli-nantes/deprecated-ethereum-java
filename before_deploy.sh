@@ -1,3 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-sed -i "s/__datenow__/$datenow/g" ./bintray_descriptor.json
+datenow=$(date +"%Y%m%d")
+sed -i "s,__datenow__,$datenow,g" ./bintray_descriptor.json
