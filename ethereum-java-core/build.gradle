@@ -7,7 +7,7 @@ buildscript {
 }
 
 assemble.doLast {
-    file('build/libs/ethereum-java-core.jar').renameTo("ethereum-java-core/build/libs/ethereum-java-core-dailybuild-${(new Date()).format('yyyyMMddHHmm')}.jar")
+    file('build/libs/ethereum-java-core.jar').renameTo("ethereum-java-core/build/libs/ethereum-java-core-dailybuild-${(new Date()).format('yyyyMMdd')}.jar")
 }
 
 task wrapper(type: Wrapper) {
