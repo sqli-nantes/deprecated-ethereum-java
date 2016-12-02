@@ -3,7 +3,7 @@ jdk:
 - oraclejdk7
 - openjdk7
 script:
-- "./gradlew assemble"
+- "./gradlew assemble bintrayUpload"
 notifications:
   slack:
     on_success: change
