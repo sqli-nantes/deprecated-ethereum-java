@@ -6,3 +6,4 @@
 .gradle/
 data
 classes
+*.log
