@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "#!/bin/bash" > killPrerequisite.sh
+echo "kill " $$ >> killPrerequisite.sh
+chmod +x killPrerequisite.sh
+
 #CONSTANTS
 passwd="admin"
 rpc_provider_port="8547"
@@ -60,4 +64,5 @@ mv genesis.json.backup genesis.json
 rm contract.log
 rm config.json
 mv config.json.backup config.json
+rm killPrerequisite.sh
 
