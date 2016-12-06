@@ -1,6 +1,7 @@
 # Ethereum-java
 
 [![Build Status](https://travis-ci.org/sqli-nantes/ethereum-java.svg?branch=master)](https://travis-ci.org/sqli-nantes/ethereum-java)
+[ ![Download](https://api.bintray.com/packages/sqli-nantes/ethereum-java/ethereum-java-core/images/download.svg) ](https://bintray.com/sqli-nantes/ethereum-java/ethereum-java-core/_latestVersion)
 
 Java API to communicate with an Ethereum Node via RPC or IPC
 
