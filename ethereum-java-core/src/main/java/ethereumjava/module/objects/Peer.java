@@ -14,24 +14,42 @@ public class Peer {
     Network network;
     Protocols protocols;
 
-    public class Network{
+    @Override
+    public String toString() {
+        return "Peer{" +
+            "caps=" + caps +
+            ", id='" + id + '\'' +
+            ", name='" + name + '\'' +
+            ", network=" + network +
+            ", protocols=" + protocols +
+            '}';
+    }
+
+    public class Network {
         public String localAddress;
         public String remoteAddress;
 
         @Override
         public String toString() {
             return "Network{" +
-                    "localAddress='" + localAddress + '\'' +
-                    ", remoteAddress='" + remoteAddress + '\'' +
-                    '}';
+                "localAddress='" + localAddress + '\'' +
+                ", remoteAddress='" + remoteAddress + '\'' +
+                '}';
         }
     }
 
-    public class Protocols{
+    public class Protocols {
 
         public Eth eth;
 
-        public class Eth{
+        @Override
+        public String toString() {
+            return "Protocols{" +
+                "eth=" + eth +
+                '}';
+        }
+
+        public class Eth {
             public BigInteger difficulty;
             public String head;
             public int version;
@@ -39,29 +57,11 @@ public class Peer {
             @Override
             public String toString() {
                 return "Eth{" +
-                        "difficulty=" + difficulty +
-                        ", head='" + head + '\'' +
-                        ", version=" + version +
-                        '}';
+                    "difficulty=" + difficulty +
+                    ", head='" + head + '\'' +
+                    ", version=" + version +
+                    '}';
             }
         }
-
-        @Override
-        public String toString() {
-            return "Protocols{" +
-                    "eth=" + eth +
-                    '}';
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Peer{" +
-                "caps=" + caps +
-                ", id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", network=" + network +
-                ", protocols=" + protocols +
-                '}';
     }
 }

@@ -20,7 +20,6 @@ import ethereumjava.module.converter.ParameterConverter;
 import ethereumjava.net.Request;
 import ethereumjava.net.provider.Provider;
 import ethereumjava.solidity.Contract;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 /**
  * Entry class. Allows managment of a Geth node via Remote Pocedure Call or Inter-process communication.
@@ -45,16 +44,19 @@ public class EthereumJava {
 
     /**
      * The Admin module, giving accesses to admin methods.
+     *
      * @see Admin
      */
     public Admin admin;
     /**
      * The Personal module, giving accesses to personal methods.
+     *
      * @see Personal
      */
     public Personal personal;
     /**
      * The Eth module, giving accesses to eth methods.
+     *
      * @see Personal
      */
     public Eth eth;
@@ -65,7 +67,7 @@ public class EthereumJava {
 
     private Provider provider;
 
-    private EthereumJava(Provider provider,Admin admin, Personal personal, Eth eth,Contract contract) {
+    private EthereumJava(Provider provider, Admin admin, Personal personal, Eth eth, Contract contract) {
         this.admin = admin;
         this.personal = personal;
         this.eth = eth;
@@ -73,7 +75,7 @@ public class EthereumJava {
         this.provider = provider;
     }
 
-    public void close(){
+    public void close() {
         provider.stop();
     }
 
@@ -87,10 +89,12 @@ public class EthereumJava {
         private InvocationHandler handler;
         private Provider provider;
 
-        public Builder(){}
+        public Builder() {
+        }
 
         /**
          * Set EthereumJava's provider.
+         *
          * @param provider instance of a Provider
          * @return Builder class used with Builder pattern
          */
@@ -102,17 +106,21 @@ public class EthereumJava {
 
         /**
          * Build EthereumJava with its parameters and returns the parameterized instance.
+         *
          * @return EthereumJava parameterized instance
-         * @throws EthereumJavaException if provider is not set. Use builder.provider([...]) to set the provider
+         * @throws EthereumJavaException if provider is not set. Use builder.provider([...]) to set
+         *                               the provider
          */
         public EthereumJava build() throws EthereumJavaException {
-            if( this.provider == null || handler == null ) throw new EthereumJavaException("Missing provider");
+            if (this.provider == null || handler == null){
+                throw new EthereumJavaException("Missing provider");
+            }
             provider.init();
-            Admin admin = (Admin) Proxy.newProxyInstance(Admin.class.getClassLoader(), new Class[]{Admin.class},handler);
-            Personal personal = (Personal) Proxy.newProxyInstance(Personal.class.getClassLoader(),new Class[]{Personal.class},handler);
-            Eth eth = (Eth) Proxy.newProxyInstance(Eth.class.getClassLoader(),new Class[]{Eth.class},handler);
+            Admin admin = (Admin) Proxy.newProxyInstance(Admin.class.getClassLoader(), new Class[]{Admin.class}, handler);
+            Personal personal = (Personal) Proxy.newProxyInstance(Personal.class.getClassLoader(), new Class[]{Personal.class}, handler);
+            Eth eth = (Eth) Proxy.newProxyInstance(Eth.class.getClassLoader(), new Class[]{Eth.class}, handler);
             Contract contract = new Contract(eth);
-            return new EthereumJava(provider,admin,personal,eth,contract);
+            return new EthereumJava(provider, admin, personal, eth, contract);
         }
 
     }
@@ -128,17 +136,17 @@ public class EthereumJava {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
-            Type returnType = Utils.extractReturnType(method,args); //Must extract from originial parameters (next instruction convert these parameters)
+            Type returnType = Utils.extractReturnType(method, args); //Must extract from originial parameters (next instruction convert these parameters)
 
-            if( args != null ){
-                args = convertArgumentsIfNecessary(method,args);
+            if (args != null) {
+                args = convertArgumentsIfNecessary(method, args);
             }
             String formattedArgs = Utils.formatArgsToString(args);
             String moduleName = method.getDeclaringClass().getSimpleName().toLowerCase();
-            String methodName = "_"+Utils.extractMethodName(method);
+            String methodName = "_" + Utils.extractMethodName(method);
 
 
-            Request request = new Request(moduleName+methodName,formattedArgs,returnType);
+            Request request = new Request(moduleName + methodName, formattedArgs, returnType);
 
             Observable<?> result = provider.sendRequest(request);
             return convertToSyncIfNecessary(result, method);
@@ -147,10 +155,10 @@ public class EthereumJava {
 
         private Object[] convertArgumentsIfNecessary(Method method, Object[] args) {
             List<Object> arguments = new ArrayList<>(Arrays.asList(args));
-            int i=0;
-            for(Annotation[] parameter : method.getParameterAnnotations()){
+            int i = 0;
+            for (Annotation[] parameter : method.getParameterAnnotations()) {
                 List<Annotation> parameterAnnotations = Arrays.asList(parameter);
-                for( Annotation annotation : parameterAnnotations ) {
+                for (Annotation annotation : parameterAnnotations) {
                     if (annotation.annotationType().isAssignableFrom(ExcludeFromRequest.class)) {
                         arguments.remove(i);
                     } else if (annotation.annotationType().isAssignableFrom(ConvertParam.class)) {
@@ -170,18 +178,17 @@ public class EthereumJava {
 
         private <T> Object convertToSyncIfNecessary(Observable<T> requestResult, Method method) throws EthereumJavaException {
             Object result = null;
-            if(method.getReturnType().isAssignableFrom(Observable.class)) {
+            if (method.getReturnType().isAssignableFrom(Observable.class)) {
                 result = requestResult;
-            } else if( requestResult != null ){
+            } else if (requestResult != null) {
                 try {
                     result = requestResult.toBlocking().single(); //TODO subscribeOn (thread current) / observeOn (pool thread)
-                }catch(NoSuchElementException e ){
+                } catch (NoSuchElementException e) {
                     throw new EthereumJavaException(e);
                 }
             }
             return result;
         }
-
 
 
     }

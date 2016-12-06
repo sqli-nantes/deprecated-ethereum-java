@@ -10,17 +10,19 @@ import ethereumjava.solidity.types.SType;
  */
 public abstract class SCoder {
 
-    public static String encodeParams(Object[] parameters){
+    public static String encodeParams(Object[] parameters) {
 
         int dynamicOffset = 0;
 
         String encodedParameters = "";
-        for(Object parameter : parameters){
+        for (Object parameter : parameters) {
 
             Class paramClass = parameter.getClass();
             Class<? extends SEncoder> encoder = SCoderMapper.getEncoderForClass(paramClass);
 
-            if( encoder == null ) throw new EthereumJavaException("No encoder found for this class : "+paramClass.getSimpleName());
+            if (encoder == null) {
+                throw new EthereumJavaException("No encoder found for this class : " + paramClass.getSimpleName());
+            }
             try {
                 String encodedParam = encoder.newInstance().encode(parameter);
 
@@ -35,7 +37,6 @@ public abstract class SCoder {
                 throw new EthereumJavaException(e);
             }
         }
-
 
 
         return encodedParameters;

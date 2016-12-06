@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by gunicolas on 14/10/16.
  */
-public class FilterOptions{
+public class FilterOptions {
 
     List<String> topics;
     String address;
@@ -25,8 +25,8 @@ public class FilterOptions{
 
         JSONObject jsonObject = new JSONObject();
 
-        if( topics != null ) jsonObject.put("topics",topics);
-        if( address != null ) jsonObject.put("address",address);
+        if (topics != null) jsonObject.put("topics", topics);
+        if (address != null) jsonObject.put("address", address);
 
         return jsonObject.toString();
     }

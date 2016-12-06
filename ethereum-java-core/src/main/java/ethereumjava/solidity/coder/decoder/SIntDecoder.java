@@ -9,9 +9,6 @@ public abstract class SIntDecoder implements SDecoder<SInt> {
 
     @Override
     public SInt decode(String toDecode) {
-
-
-
         return null;
     }
 }

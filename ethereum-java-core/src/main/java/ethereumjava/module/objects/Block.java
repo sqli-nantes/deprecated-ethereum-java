@@ -28,43 +28,43 @@ public class Block<T extends TransactionFormat> {
     public List<T> transactions;
     public List<String> uncles;
 
-    public enum BlockParameter{
-        LATEST ("latest"),
-        PENDING ("pending"),
-        EARLIEST ("earliest");
-
-        private String name;
-
-        BlockParameter(String name){
-            this.name = name;
-        }
-
-        public String toString(){
-            return "\""+name+"\"";
-        }
-    }
-
     @Override
     public String toString() {
         return "Block{" +
-                "number=" + number +
-                ", hash='" + hash + '\'' +
-                ", parentHash='" + parentHash + '\'' +
-                ", nonce='" + nonce + '\'' +
-                ", sha3Uncles='" + sha3Uncles + '\'' +
-                ", logsBloom='" + logsBloom + '\'' +
-                ", transactionsRoot='" + transactionsRoot + '\'' +
-                ", stateRoot='" + stateRoot + '\'' +
-                ", miner='" + miner + '\'' +
-                ", difficulty=" + difficulty +
-                ", totalDifficulty=" + totalDifficulty +
-                ", extraData='" + extraData + '\'' +
-                ", size=" + size +
-                ", gasLimit=" + gasLimit +
-                ", gasUsed=" + gasUsed +
-                ", timestamp=" + timestamp +
-                ", transactions=" + transactions +
-                ", uncles=" + uncles +
-                '}';
+            "number=" + number +
+            ", hash='" + hash + '\'' +
+            ", parentHash='" + parentHash + '\'' +
+            ", nonce='" + nonce + '\'' +
+            ", sha3Uncles='" + sha3Uncles + '\'' +
+            ", logsBloom='" + logsBloom + '\'' +
+            ", transactionsRoot='" + transactionsRoot + '\'' +
+            ", stateRoot='" + stateRoot + '\'' +
+            ", miner='" + miner + '\'' +
+            ", difficulty=" + difficulty +
+            ", totalDifficulty=" + totalDifficulty +
+            ", extraData='" + extraData + '\'' +
+            ", size=" + size +
+            ", gasLimit=" + gasLimit +
+            ", gasUsed=" + gasUsed +
+            ", timestamp=" + timestamp +
+            ", transactions=" + transactions +
+            ", uncles=" + uncles +
+            '}';
+    }
+
+    public enum BlockParameter {
+        LATEST("latest"),
+        PENDING("pending"),
+        EARLIEST("earliest");
+
+        private String name;
+
+        BlockParameter(String name) {
+            this.name = name;
+        }
+
+        public String toString() {
+            return "\"" + name + "\"";
+        }
     }
 }

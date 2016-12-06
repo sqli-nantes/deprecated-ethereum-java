@@ -16,8 +16,9 @@ public class SBytes extends SType<Byte[]> {
     }
 
 
-    public static SBytes fromByteArray(Byte[] value){
-        if( value.length > 32 ) throw new EthereumJavaException("illegal argument. SBytes is limited to 32 bytes length.");
+    public static SBytes fromByteArray(Byte[] value) {
+        if (value.length > 32)
+            throw new EthereumJavaException("illegal argument. SBytes is limited to 32 bytes length.");
         return new SBytes(value);
     }
 
@@ -26,10 +27,10 @@ public class SBytes extends SType<Byte[]> {
     }
 
     public static int staticPartLength(String name) {
-        if( isType(name) ) {
+        if (isType(name)) {
             int start = "bytes".length();
             int arrayIndex = name.indexOf("[");
-            if( arrayIndex == -1 ) arrayIndex = name.length();
+            if (arrayIndex == -1) arrayIndex = name.length();
 
             String sizeStr = name.substring(start, arrayIndex);
 
@@ -47,9 +48,9 @@ public class SBytes extends SType<Byte[]> {
     @Override
     public String asString() {
         StringBuilder sb = new StringBuilder();
-        for(Byte b : value){
-            if( b == null ) break;
-            sb.append(String.format("%02X",b & 0xff).toLowerCase());
+        for (Byte b : value) {
+            if (b == null) break;
+            sb.append(String.format("%02X", b & 0xff).toLowerCase());
         }
         return sb.toString();
     }

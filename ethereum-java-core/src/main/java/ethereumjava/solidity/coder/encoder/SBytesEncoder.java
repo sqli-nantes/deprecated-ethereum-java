@@ -12,6 +12,6 @@ public class SBytesEncoder implements SEncoder<SBytes> {
 
     @Override
     public String encode(SBytes toEncode) {
-        return SolidityUtils.padRightWithZeros(toEncode.asString(),64);
+        return SolidityUtils.padRightWithZeros(toEncode.asString(), 64);
     }
 }

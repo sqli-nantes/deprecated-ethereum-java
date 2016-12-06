@@ -21,7 +21,7 @@ public class SUIntEncoder implements SEncoder<SUInt> {
         MathContext mc = new MathContext(0, RoundingMode.DOWN);
         BigDecimal twoCompDecRounded = twoCompDec.round(mc);
         String twoCompDecRoundedHexa = SolidityUtils.bigDecimalToHexString(twoCompDecRounded);
-        String result = SolidityUtils.padLeftWithZeros(twoCompDecRoundedHexa,64);
+        String result = SolidityUtils.padLeftWithZeros(twoCompDecRoundedHexa, 64);
         return result;
     }
 }

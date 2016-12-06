@@ -8,26 +8,25 @@ import java.util.Formatter;
  */
 public abstract class Sha3 {
 
-
-    public static String hash(String value){
-
+    public static String hash(String value) {
         byte[] b = value.getBytes();
         String s = getHexStringByByteArray(b);
 
         Keccak keccak = new Keccak(1600);
-        return keccak.getHash(s,1088,32);
+        return keccak.getHash(s, 1088, 32);
 
     }
 
     private static String getHexStringByByteArray(byte[] array) {
-        if (array == null)
+        if (array == null){
             return null;
-
+        }
         StringBuilder stringBuilder = new StringBuilder(array.length * 2);
         @SuppressWarnings("resource")
         Formatter formatter = new Formatter(stringBuilder);
-        for (byte tempByte : array)
+        for (byte tempByte : array) {
             formatter.format("%02x", tempByte);
+        }
 
         return stringBuilder.toString();
     }

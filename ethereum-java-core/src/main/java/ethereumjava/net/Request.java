@@ -40,7 +40,7 @@ public class Request {
         return subscribers;
     }
 
-    public void addSubscriber(Subscriber subscriber){
+    public void addSubscriber(Subscriber subscriber) {
         this.subscribers.add(subscriber);
     }
 

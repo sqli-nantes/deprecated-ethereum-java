@@ -1,9 +1,9 @@
 package ethereumjava.solidity;
 
+import java.lang.reflect.Method;
+
 import ethereumjava.module.Eth;
 import ethereumjava.sha3.Sha3;
-
-import java.lang.reflect.Method;
 
 /**
  * Abstract class which designate Solidity contract elements like Function or Events
@@ -16,30 +16,31 @@ public abstract class SolidityElement {
     String fullName;
     Eth eth;
 
-    public SolidityElement(String address, Method method,Eth eth) {
+    public SolidityElement(String address, Method method, Eth eth) {
         this.address = address;
         this.method = method;
         this.fullName = transformToFullName();
         this.eth = eth;
     }
 
-    protected String transformToFullName(){
+    protected String transformToFullName() {
         StringBuilder sbStr = new StringBuilder();
-        int i=0;
+        int i = 0;
         Class[] parameters = getParametersTypes();
         for (Class c : parameters) {
             sbStr.append(c.getSimpleName().substring(1).toLowerCase());
-            if( i < parameters.length-1 ){
+            if (i < parameters.length - 1) {
                 sbStr.append(",");
             }
             i++;
         }
         return method.getName() + '(' + sbStr.toString() + ')';
     }
+
     protected abstract Class[] getParametersTypes();
 
 
-    protected String signature(){
+    protected String signature() {
         return Sha3.hash(this.fullName);
     }
 }

@@ -12,7 +12,7 @@ public class Hash extends TransactionFormat {
         this.value = value;
     }
 
-    public static Hash valueOf(String value) throws IllegalArgumentException{
+    public static Hash valueOf(String value) throws IllegalArgumentException {
         return new Hash(value);
     }
 
@@ -22,6 +22,6 @@ public class Hash extends TransactionFormat {
 
     @Override
     public String toString() {
-        return "\""+value+"\"";
+        return "\"" + value + "\"";
     }
 }

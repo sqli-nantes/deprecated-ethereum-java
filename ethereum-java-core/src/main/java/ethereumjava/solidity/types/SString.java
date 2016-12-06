@@ -14,7 +14,7 @@ public class SString extends SType<String> {
         //OuputStringFormatter()
     }
 
-    public static SString fromString(String from){
+    public static SString fromString(String from) {
         return new SString(from);
     }
 

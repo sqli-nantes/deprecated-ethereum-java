@@ -1,7 +1,6 @@
 package ethereumjava.net.provider;
 
 
-
 import ethereumjava.exception.EthereumJavaException;
 
 /**

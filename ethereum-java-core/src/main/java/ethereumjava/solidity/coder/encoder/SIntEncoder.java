@@ -19,7 +19,7 @@ public class SIntEncoder implements SEncoder<SInt> {
         MathContext mc = new MathContext(0, RoundingMode.DOWN);
         BigDecimal twoCompDecRounded = twoCompDec.round(mc);
         String twoCompDecRoundedHexa = SolidityUtils.bigDecimalToHexString(twoCompDecRounded);
-        String result = SolidityUtils.padLeftWithZeros(twoCompDecRoundedHexa,64);
+        String result = SolidityUtils.padLeftWithZeros(twoCompDecRoundedHexa, 64);
         return result;
     }
 

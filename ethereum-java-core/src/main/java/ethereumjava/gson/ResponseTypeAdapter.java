@@ -17,7 +17,7 @@ import ethereumjava.net.Response;
 /**
  * Created by gunicolas on 25/08/16.
  */
-public class ResponseTypeAdapter<T> implements JsonSerializer<Response<T>>,JsonDeserializer<Response<T>> {
+public class ResponseTypeAdapter<T> implements JsonSerializer<Response<T>>, JsonDeserializer<Response<T>> {
 
     Map<Integer, Request> requestQueue;
 
@@ -32,7 +32,7 @@ public class ResponseTypeAdapter<T> implements JsonSerializer<Response<T>>,JsonD
         Request request = requestQueue.get(requestId);
         Type returnType = request.getReturnType();
 
-        T result = context.deserialize(requestJson.get("result"),returnType);
+        T result = context.deserialize(requestJson.get("result"), returnType);
         Response<T>.Error error = context.deserialize(requestJson.get("error"), Response.Error.class);
 
         return new Response<>(requestId, result, error, request);

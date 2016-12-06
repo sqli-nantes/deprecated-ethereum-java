@@ -7,13 +7,13 @@ import java.lang.annotation.Target;
 
 /**
  * Define generic type declaration position in the signature.
- * Created by root on 27/10/16.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface GenericTypeIndex {
     /**
      * The index in the signature. Must be in the range [0..n] (with n == number of parameters)
+     *
      * @return the index in the signature.
      */
     int value();

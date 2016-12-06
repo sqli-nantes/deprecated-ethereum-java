@@ -11,11 +11,11 @@ public class Main {
     static final String RPC_ADDRESS = "http://localhost:8547";
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         EthereumJava ethereumJava = new EthereumJava.Builder()
-                .provider(new RpcProvider(RPC_ADDRESS))
-                .build();
+            .provider(new RpcProvider(RPC_ADDRESS))
+            .build();
 
         System.out.println("it works");
     }

@@ -23,15 +23,15 @@ public class TransactionReceipt {
     @Override
     public String toString() {
         return "TransactionReceipt{" +
-                "blockHash='" + blockHash + '\'' +
-                ", blockNumber=" + blockNumber +
-                ", transactionHash='" + transactionHash + '\'' +
-                ", transactionIndex=" + transactionIndex +
-                ", from='" + from + '\'' +
-                ", to='" + to + '\'' +
-                ", cumulativeGasUsed=" + cumulativeGasUsed +
-                ", gasUsed=" + gasUsed +
-                ", contractAddress='" + contractAddress + '\'' +
-                '}';
+            "blockHash='" + blockHash + '\'' +
+            ", blockNumber=" + blockNumber +
+            ", transactionHash='" + transactionHash + '\'' +
+            ", transactionIndex=" + transactionIndex +
+            ", from='" + from + '\'' +
+            ", to='" + to + '\'' +
+            ", cumulativeGasUsed=" + cumulativeGasUsed +
+            ", gasUsed=" + gasUsed +
+            ", contractAddress='" + contractAddress + '\'' +
+            '}';
     }
 }

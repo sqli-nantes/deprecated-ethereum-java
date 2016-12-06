@@ -5,11 +5,11 @@ package ethereumjava.exception;
  */
 public class EthereumJavaException extends RuntimeException {
 
-    public EthereumJavaException(Exception e){
-        super(e.getMessage(),e.getCause());
+    public EthereumJavaException(Exception e) {
+        super(e.getMessage(), e.getCause());
     }
 
     public EthereumJavaException(String message) {
-         super(message);
+        super(message);
     }
 }

@@ -15,14 +15,16 @@ public class SBool extends SType<Boolean> {
     }
 
 
-    public static SBool fromBoolean(boolean value){
+    public static SBool fromBoolean(boolean value) {
         return new SBool(value);
     }
+
     public static boolean isType(String name) {
         return Pattern.compile("^bool(\\[([0-9])*\\])*$").matcher(name).matches();
     }
+
     public static int staticPartLength(String name) {
-        return 32*staticArrayLength(name);
+        return 32 * staticArrayLength(name);
     }
 
     @Override

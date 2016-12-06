@@ -20,7 +20,7 @@ public class BigIntegerTypeAdapter extends TypeAdapter<BigInteger> {
     @Override
     public BigInteger read(JsonReader in) throws IOException {
         String hexa = in.nextString();
-        hexa = hexa.replace("0x","");
-        return new BigInteger(hexa,16);
+        hexa = hexa.replace("0x", "");
+        return new BigInteger(hexa, 16);
     }
 }

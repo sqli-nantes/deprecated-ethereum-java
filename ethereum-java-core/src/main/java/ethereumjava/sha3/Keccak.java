@@ -13,40 +13,40 @@ public class Keccak {
     private static BigInteger BIT_64 = new BigInteger("18446744073709551615");
 
     /* round constants RC[i] */
-    private BigInteger[] RC = new BigInteger[] {
-            new BigInteger("0000000000000001", 16),
-            new BigInteger("0000000000008082", 16),
-            new BigInteger("800000000000808A", 16),
-            new BigInteger("8000000080008000", 16),
-            new BigInteger("000000000000808B", 16),
-            new BigInteger("0000000080000001", 16),
-            new BigInteger("8000000080008081", 16),
-            new BigInteger("8000000000008009", 16),
-            new BigInteger("000000000000008A", 16),
-            new BigInteger("0000000000000088", 16),
-            new BigInteger("0000000080008009", 16),
-            new BigInteger("000000008000000A", 16),
-            new BigInteger("000000008000808B", 16),
-            new BigInteger("800000000000008B", 16),
-            new BigInteger("8000000000008089", 16),
-            new BigInteger("8000000000008003", 16),
-            new BigInteger("8000000000008002", 16),
-            new BigInteger("8000000000000080", 16),
-            new BigInteger("000000000000800A", 16),
-            new BigInteger("800000008000000A", 16),
-            new BigInteger("8000000080008081", 16),
-            new BigInteger("8000000000008080", 16),
-            new BigInteger("0000000080000001", 16),
-            new BigInteger("8000000080008008", 16)
+    private BigInteger[] RC = new BigInteger[]{
+        new BigInteger("0000000000000001", 16),
+        new BigInteger("0000000000008082", 16),
+        new BigInteger("800000000000808A", 16),
+        new BigInteger("8000000080008000", 16),
+        new BigInteger("000000000000808B", 16),
+        new BigInteger("0000000080000001", 16),
+        new BigInteger("8000000080008081", 16),
+        new BigInteger("8000000000008009", 16),
+        new BigInteger("000000000000008A", 16),
+        new BigInteger("0000000000000088", 16),
+        new BigInteger("0000000080008009", 16),
+        new BigInteger("000000008000000A", 16),
+        new BigInteger("000000008000808B", 16),
+        new BigInteger("800000000000008B", 16),
+        new BigInteger("8000000000008089", 16),
+        new BigInteger("8000000000008003", 16),
+        new BigInteger("8000000000008002", 16),
+        new BigInteger("8000000000000080", 16),
+        new BigInteger("000000000000800A", 16),
+        new BigInteger("800000008000000A", 16),
+        new BigInteger("8000000080008081", 16),
+        new BigInteger("8000000000008080", 16),
+        new BigInteger("0000000080000001", 16),
+        new BigInteger("8000000080008008", 16)
     };
 
     //	The rotation offsets r[x,y].
-    private int[][] r = new int[][] {
-            {0,    36,     3,    41,    18},
-            {1,    44,    10,    45,     2},
-            {62,    6,    43,    15,    61},
-            {28,   55,    25,    21,    56},
-            {27,   20,    39,     8,    14}
+    private int[][] r = new int[][]{
+        {0, 36, 3, 41, 18},
+        {1, 44, 10, 45, 2},
+        {62, 6, 43, 15, 61},
+        {28, 55, 25, 21, 56},
+        {27, 20, 39, 8, 14}
     };
 
     private int w;
@@ -74,11 +74,11 @@ public class Keccak {
         BigInteger[][] P = padding(message, r);
 
 //	    Absorbing phase
-        for (BigInteger[] Pi: P) {
+        for (BigInteger[] Pi : P) {
             for (int i = 0; i < 5; i++)
                 for (int j = 0; j < 5; j++)
-                    if((i + j * 5)<(r/w))
-                        S[i][j] = S[i][j].xor(Pi[i + j *5]);
+                    if ((i + j * 5) < (r / w))
+                        S[i][j] = S[i][j].xor(Pi[i + j * 5]);
 
             doKeccackf(S);
         }
@@ -90,7 +90,7 @@ public class Keccak {
 
             for (int i = 0; i < 5; i++)
                 for (int j = 0; j < 5; j++)
-                    if ((5*i + j) < (r / w))
+                    if ((5 * i + j) < (r / w))
                         Z = Z + addZero(getReverseHexString(S[j][i]), 16).substring(0, 16);
 
             doKeccackf(S);
@@ -216,7 +216,7 @@ public class Keccak {
 
     private String addZero(String str, int length) {
         String retStr = str;
-        for (int i = 0; i < length - str.length(); i ++)
+        for (int i = 0; i < length - str.length(); i++)
             retStr += "0";
         return retStr;
     }
@@ -246,7 +246,7 @@ public class Keccak {
         @SuppressWarnings("resource")
         Formatter formatter = new Formatter(stringBuilder);
 
-        for (byte tempByte: array)
+        for (byte tempByte : array)
             formatter.format("%02x", tempByte);
 
         return stringBuilder.toString();

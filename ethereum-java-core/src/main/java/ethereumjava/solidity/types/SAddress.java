@@ -1,6 +1,5 @@
 package ethereumjava.solidity.types;
 
-
 import java.util.regex.Pattern;
 
 import ethereumjava.exception.EthereumJavaException;
@@ -17,13 +16,15 @@ public class SAddress extends SType<String> {
     }
 
     public static SAddress fromString(String from) throws EthereumJavaException {
-        if( !isAddress(from) ) throw new EthereumJavaException("illegal argument. "+from+" is not a solidity address");
+        if (!isAddress(from))
+            throw new EthereumJavaException("illegal argument. " + from + " is not a solidity address");
         return new SAddress(from);
     }
 
-    public static boolean isAddress(String value){
+    public static boolean isAddress(String value) {
         return Pattern.compile("^(0x)?([0-9a-fA-F]){40}$").matcher(value).matches();
     }
+
     public static boolean isType(String name) {
         return Pattern.compile("^address(\\[([0-9])*\\])*$").matcher(name).matches();
     }
