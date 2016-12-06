@@ -20,11 +20,6 @@ public class RPCTest {
 
     @Before
     public void setUp() throws Exception{
-        config = Config.newInstance();
-
-        ethereumJava = new EthereumJava.Builder()
-                .provider(new RpcProvider("http://"+config.rpcProviderAddr +":"+config.rpcProviderPort))
-                .build();
 
 
 
@@ -33,28 +28,12 @@ public class RPCTest {
             public void run() {
 
                 try {
-                    //p = Runtime.getRuntime().exec(System.getProperty("user.dir") + "/src/test/resources/prerequisite.sh ", null, new File(System.getProperty("user.dir") + "/src/test/resources/"));
 
                     ProcessBuilder builder = new ProcessBuilder("/bin/bash", System.getProperty("user.dir") + "/src/test/resources/prerequisite.sh");
                     builder.directory(new File(System.getProperty("user.dir") + "/src/test/resources/"));
                     builder.redirectOutput(new File(System.getProperty("user.dir") + "/src/test/resources/out.log"));
                     builder.redirectError(new File(System.getProperty("user.dir") + "/src/test/resources/out.err.log"));
                     p = builder.start();
-
-
-
-//            InputStream is = p.getInputStream();
-//            InputStreamReader isr = new InputStreamReader(is);
-//            BufferedReader br = new BufferedReader(isr);
-
-//            while (true) {
-//                final String line = br.readLine();
-//                if (line.contains("HTTP endpoint opened")) break;
-//
-//                System.out.println(line);
-//                System.out.flush();
-//            }
-
 
                 } catch (IOException e) {
                     assertTrue("Prerequisite couldn't be executed" + e,false);
@@ -70,7 +49,6 @@ public class RPCTest {
         while (keepReading) {
             line = br.readLine();
             if (line == null) {
-                //wait until there is more of the file for us to read
                 Thread.sleep(500);
             }
             else {
@@ -78,6 +56,13 @@ public class RPCTest {
                     keepReading = false;
             }
         }
+
+
+        config = Config.newInstance();
+
+        ethereumJava = new EthereumJava.Builder()
+                .provider(new RpcProvider("http://"+config.rpcProviderAddr +":"+config.rpcProviderPort))
+                .build();
 
     }
 

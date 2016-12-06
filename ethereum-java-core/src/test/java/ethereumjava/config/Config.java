@@ -42,11 +42,11 @@ public final class Config {
     }
 
     public static Config newInstance() throws FileNotFoundException {
-        if( INSTANCE == null ){
+        //if( INSTANCE == null ){
             FileReader reader = new FileReader(PATH);
             Gson deserializer = new Gson();
             INSTANCE = deserializer.fromJson(reader,Config.class);
-        }
+        //}
         return INSTANCE;
     }
 }
