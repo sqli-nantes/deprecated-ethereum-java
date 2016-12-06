@@ -112,12 +112,17 @@ public abstract class IpcAbstractProvider extends AbstractProvider {
 
     @Override
     public void stop() throws EthereumJavaException {
+
         if( this.listeningThread != null ){
             this.listen = false;
         }
         try {
-            this.inputStream.close();
-            this.outputStream.close();
+            if (this.inputStream != null ) {
+                this.inputStream.close();
+            }
+            if( this.outputStream != null ) {
+                this.outputStream.close();
+            }
         }catch(IOException e){
             throw new EthereumJavaException(e);
         }
