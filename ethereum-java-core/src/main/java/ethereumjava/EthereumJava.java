@@ -22,11 +22,45 @@ import ethereumjava.net.provider.Provider;
 import ethereumjava.solidity.Contract;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
+/**
+ * Entry class. Allows managment of a Geth node via Remote Pocedure Call or Inter-process communication.
+ * It can :
+ *      - communicates with Geth exposed interfaces : Admin, eth, personal.
+ *      - call a smart-contract deployed on the Ethereum blockchain with the Contract module.
+ * It can be personalized with its builder, like define the provider and its parameters.
+ * Instanciate EthereumJava like this :
+ *
+ *      EthereumJava ethereumJava = new EthereumJava.Builder()
+ *          .provider(new RpcProvider("http://localhost:8545"))
+ *          .build();
+ *
+ *  Then, modules are accessibles directly :
+ *
+ *      ethereumJava.eth.[...]
+ *      ethereumJava.admin.[...]
+ *      ethereumJava.personal.[...]
+ *
+ */
 public class EthereumJava {
 
+    /**
+     * The Admin module, giving accesses to admin methods.
+     * @see Admin
+     */
     public Admin admin;
+    /**
+     * The Personal module, giving accesses to personal methods.
+     * @see Personal
+     */
     public Personal personal;
+    /**
+     * The Eth module, giving accesses to eth methods.
+     * @see Personal
+     */
     public Eth eth;
+    /**
+     * The Contract module, allowing to communicate with a deployed contract on Ethereum blockchain.
+     */
     public Contract contract;
 
     private Provider provider;
@@ -43,6 +77,11 @@ public class EthereumJava {
         provider.stop();
     }
 
+    /**
+     * Builder used to parameterize EthereumJava instance.
+     * You can set the provider, then build to get the instance.
+     * <b>Caution:</b> there is no default provider.
+     */
     public static class Builder {
 
         private InvocationHandler handler;
@@ -50,11 +89,22 @@ public class EthereumJava {
 
         public Builder(){}
 
+        /**
+         * Set EthereumJava's provider.
+         * @param provider instance of a Provider
+         * @return Builder class used with Builder pattern
+         */
         public Builder provider(Provider provider) {
             this.provider = provider;
             handler = new InvocationHandler(this.provider);
             return this;
         }
+
+        /**
+         * Build EthereumJava with its parameters and returns the parameterized instance.
+         * @return EthereumJava parameterized instance
+         * @throws EthereumJavaException if provider is not set. Use builder.provider([...]) to set the provider
+         */
         public EthereumJava build() throws EthereumJavaException {
             if( this.provider == null || handler == null ) throw new EthereumJavaException("Missing provider");
             provider.init();

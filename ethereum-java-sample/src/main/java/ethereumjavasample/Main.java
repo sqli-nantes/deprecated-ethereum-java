@@ -1,7 +1,6 @@
 package ethereumjavasample;
 
 import ethereumjava.EthereumJava;
-import ethereumjava.module.objects.NodeInfo;
 import ethereumjava.net.provider.RpcProvider;
 
 /**
