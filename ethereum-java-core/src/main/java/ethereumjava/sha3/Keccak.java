@@ -3,16 +3,16 @@ package ethereumjava.sha3;
 import java.math.BigInteger;
 import java.util.Formatter;
 
-/**
+/*
  * @author romus //TODO Remove ???
  *
  */
 public class Keccak {
 
-    /** max unsigned long */
+    /* max unsigned long */
     private static BigInteger BIT_64 = new BigInteger("18446744073709551615");
 
-    /** round constants RC[i] */
+    /* round constants RC[i] */
     private BigInteger[] RC = new BigInteger[] {
             new BigInteger("0000000000000001", 16),
             new BigInteger("0000000000008082", 16),
@@ -52,7 +52,7 @@ public class Keccak {
     private int w;
     private int n;
 
-    /**
+    /*
      *  Constructor
      *
      * @param b  {25, 50, 100, 200, 400, 800, 1600} sha-3 -> b = 1600
