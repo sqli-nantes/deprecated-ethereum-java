@@ -15,7 +15,7 @@ import java.util.Arrays;
  * Created by gunicolas on 22/08/16.
  */
 
-public abstract class Utils {
+abstract class Utils {
 
 
     /*
@@ -29,7 +29,7 @@ public abstract class Utils {
 
      */
     @SuppressWarnings("unchecked")
-    public static Type extractReturnType(Method m,Object[] args){
+    static Type extractReturnType(Method m,Object[] args){
 
         Type returnType = null;
         if( m.getReturnType().isAssignableFrom(Observable.class) ) { // Case of Observable<Object>
@@ -52,7 +52,7 @@ public abstract class Utils {
         return returnType;
     }
 
-    public static Type getType(final Class<?> rawClass, final Class<?> parameter) {
+    static Type getType(final Class<?> rawClass, final Class<?> parameter) {
         return new ParameterizedType() {
             @Override
             public Type[] getActualTypeArguments() {
@@ -69,7 +69,7 @@ public abstract class Utils {
         };
     }
 
-    public static String formatArgsToString(Object[] args) {
+    static String formatArgsToString(Object[] args) {
 
         if( args == null ) return "[]";
 
@@ -85,7 +85,7 @@ public abstract class Utils {
         return stringBuilder.toString();
 
     }
-    public static String formatArgToString(Object arg){
+    static String formatArgToString(Object arg){
         if( arg == null ) return "\"\"";
         if( arg instanceof String ){
             return "\""+ arg +"\"";
@@ -95,7 +95,7 @@ public abstract class Utils {
         return String.valueOf(arg);
     }
 
-    public static String extractMethodName(Method method) {
+    static String extractMethodName(Method method) {
         EthereumMethod annotation = method.getAnnotation(EthereumMethod.class);
         if( annotation != null ) return annotation.name();
         else{
