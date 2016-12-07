@@ -5,7 +5,10 @@ import ethereumjava.net.provider.RpcProvider;
 import org.junit.After;
 import org.junit.Before;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 import static org.junit.Assert.assertTrue;
 
@@ -19,8 +22,7 @@ public class RPCTest {
     protected Process p;
 
     @Before
-    public void setUp() throws Exception{
-
+    public void setUp() throws Exception {
 
 
         new Thread(new Runnable() {
@@ -36,7 +38,7 @@ public class RPCTest {
                     p = builder.start();
 
                 } catch (IOException e) {
-                    assertTrue("Prerequisite couldn't be executed" + e,false);
+                    assertTrue("Prerequisite couldn't be executed" + e, false);
                 }
             }
         }).start();
@@ -50,10 +52,10 @@ public class RPCTest {
             line = br.readLine();
             if (line == null) {
                 Thread.sleep(500);
-            }
-            else {
-                if(line.contains("HTTP endpoint opened"))
+            } else {
+                if (line.contains("HTTP endpoint opened")) {
                     keepReading = false;
+                }
             }
         }
 
@@ -61,20 +63,22 @@ public class RPCTest {
         config = Config.newInstance();
 
         ethereumJava = new EthereumJava.Builder()
-                .provider(new RpcProvider("http://"+config.rpcProviderAddr +":"+config.rpcProviderPort))
-                .build();
+            .provider(new RpcProvider("http://" + config.rpcProviderAddr + ":" + config.rpcProviderPort))
+            .build();
 
     }
 
     @After
-    public void after() throws Exception{
+    public void after() throws Exception {
         ethereumJava.close();
 
         String killer = System.getProperty("user.dir") + "/src/test/resources/killPrerequisite.sh";
 
-        if(new File(killer).exists()) {
+        if (new File(killer).exists()) {
             p.destroy();
-            while(new File(killer).exists());
+            while (new File(killer).exists()) {
+                // DO NOTHING
+            }
         }
     }
 }

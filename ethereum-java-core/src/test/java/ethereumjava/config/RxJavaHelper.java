@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class RxJavaHelper {
 
 
-    public static void waitTerminalEvent(TestSubscriber subscriber){
-        subscriber.awaitTerminalEvent(5,TimeUnit.SECONDS);
+    public static void waitTerminalEvent(TestSubscriber subscriber) {
+        subscriber.awaitTerminalEvent(5, TimeUnit.SECONDS);
     }
 }

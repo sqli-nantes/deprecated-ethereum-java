@@ -21,20 +21,20 @@ import static org.junit.Assert.assertTrue;
 public class RPCEthModuleTest extends RPCTest {
 
     @Test
-    public void blockByNumberTxObjectTest() throws Exception{
+    public void blockByNumberTxObjectTest() throws Exception {
 
         Block<Transaction> block = ethereumJava.eth.block(BigInteger.ZERO, Transaction.class);
         testBlock(block);
     }
 
     @Test
-    public void blockByNumberTxHashTest() throws Exception{
+    public void blockByNumberTxHashTest() throws Exception {
         Block<Hash> block = ethereumJava.eth.block(BigInteger.ZERO, Hash.class);
         testBlock(block);
     }
 
     @Test
-    public void getBlockByNumberTxObjectTest() throws Exception{
+    public void getBlockByNumberTxObjectTest() throws Exception {
         TestSubscriber testSubscriber = new TestSubscriber();
         ethereumJava.eth.getBlock(BigInteger.ZERO, Transaction.class)
             .subscribe(testSubscriber);
@@ -49,7 +49,7 @@ public class RPCEthModuleTest extends RPCTest {
     }
 
     @Test
-    public void getBlockByNumberTxHashTest() throws Exception{
+    public void getBlockByNumberTxHashTest() throws Exception {
         TestSubscriber testSubscriber = new TestSubscriber();
 
         ethereumJava.eth.getBlock(BigInteger.ZERO, Hash.class)
@@ -65,15 +65,15 @@ public class RPCEthModuleTest extends RPCTest {
 
     }
 
-    private void testBlock(Block<? extends TransactionFormat> block){
+    private void testBlock(Block<? extends TransactionFormat> block) {
         assertNotNull(block);
-        assertTrue(block.number.compareTo(BigInteger.ZERO)==0);
-        assertTrue(block.transactions.size()==0);
+        assertTrue(block.number.compareTo(BigInteger.ZERO) == 0);
+        assertTrue(block.transactions.size() == 0);
 
     }
 
     @Test
-    public void balanceTest() throws Exception{
+    public void balanceTest() throws Exception {
         String account = ethereumJava.personal.listAccounts().get(0);
 
         BigInteger balance = ethereumJava.eth.balance(account, Block.BlockParameter.LATEST);
@@ -81,7 +81,7 @@ public class RPCEthModuleTest extends RPCTest {
     }
 
     @Test
-    public void getBalanceTest() throws Exception{
+    public void getBalanceTest() throws Exception {
 
         TestSubscriber testSubscriber = new TestSubscriber();
         String account = ethereumJava.personal.listAccounts().get(0);
@@ -99,8 +99,8 @@ public class RPCEthModuleTest extends RPCTest {
 
     }
 
-    private void testBalance(BigInteger balance){
-        assertTrue(balance.toString().compareTo("100000000005000000000000000000")==0);
+    private void testBalance(BigInteger balance) {
+        assertTrue(balance.toString().compareTo("100000000005000000000000000000") == 0);
     }
 
 }
