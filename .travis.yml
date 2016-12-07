@@ -3,7 +3,7 @@ jdk:
 #- oraclejdk7
 - openjdk7
 script:
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then "./gradlew assemble bintrayUpload"; else "./gradlew assemble"; fi
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then ./gradlew assemble bintrayUpload; else ./gradlew assemble; fi
 #- "./gradlew assemble bintrayUpload"
 notifications:
   slack:
