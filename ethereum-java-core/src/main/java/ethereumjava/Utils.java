@@ -1,32 +1,36 @@
 package ethereumjava;
 
+import ethereumjava.exception.EthereumJavaException;
+import ethereumjava.module.annotation.EthereumMethod;
+import ethereumjava.module.annotation.GenericTypeIndex;
+import rx.Observable;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.util.Arrays;
 
-import ethereumjava.exception.EthereumJavaException;
-import ethereumjava.module.annotation.EthereumMethod;
-import ethereumjava.module.annotation.GenericTypeIndex;
-import rx.Observable;
-
 /**
  * Created by gunicolas on 22/08/16.
  */
 
+/**
+ * Utility methods
+ */
 abstract class Utils {
 
-
-    /*
-    Check given method to extract it's return type or parametized type with the exact generic type
-    (must be defined in parameters and method annotated with GenericTypeIndex ).
-    The return type can be the generic of an Observable.
-    ex:
-        Observable<String> --> String
-        Block<Hash> --> Block<Hash>
-        Observable<Block<Transaction>> --> Block<Transaction>
-
+    /**
+     * Check given method to extract it's return type or parametized type with the exact generic type
+     * (must be defined in parameters and method annotated with GenericTypeIndex ).
+     * The return type can be the generic of an Observable.
+     * <p>
+     * Example :
+     * <ul>
+     * <li>Observable<String> --> String</li>
+     * <li>Block<Hash> --> Block<Hash></li>
+     * <li>Observable<Block<Transaction>> --> Block<Transaction></li>
+     * </ul>
      */
     @SuppressWarnings("unchecked")
     static Type extractReturnType(Method m, Object[] args) {

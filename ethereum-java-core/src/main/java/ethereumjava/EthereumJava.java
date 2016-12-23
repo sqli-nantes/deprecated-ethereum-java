@@ -1,5 +1,17 @@
 package ethereumjava;
 
+import ethereumjava.exception.EthereumJavaException;
+import ethereumjava.module.Admin;
+import ethereumjava.module.Eth;
+import ethereumjava.module.Personal;
+import ethereumjava.module.annotation.ConvertParam;
+import ethereumjava.module.annotation.ExcludeFromRequest;
+import ethereumjava.module.converter.ParameterConverter;
+import ethereumjava.net.Request;
+import ethereumjava.net.provider.Provider;
+import ethereumjava.solidity.Contract;
+import rx.Observable;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -9,36 +21,37 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import ethereumjava.module.annotation.ExcludeFromRequest;
-import rx.Observable;
-import ethereumjava.exception.EthereumJavaException;
-import ethereumjava.module.Admin;
-import ethereumjava.module.Eth;
-import ethereumjava.module.Personal;
-import ethereumjava.module.annotation.ConvertParam;
-import ethereumjava.module.converter.ParameterConverter;
-import ethereumjava.net.Request;
-import ethereumjava.net.provider.Provider;
-import ethereumjava.solidity.Contract;
-
 /**
  * Entry class. Allows managment of a Geth node via Remote Pocedure Call or Inter-process communication.
+ * <p>
  * It can :
- *      - communicates with Geth exposed interfaces : Admin, eth, personal.
- *      - call a smart-contract deployed on the Ethereum blockchain with the Contract module.
+ * <ul>
+ * <li>Communicates with Geth exposed interfaces : {@link Admin Admin}, {@link Eth Eth}, {@link Personal personal}.</li>
+ * <li>Call a smart-contract deployed on the Ethereum blockchain with the {@link Contract Contract} module.</li>
+ * </ul>
+ * </p>
+ * <p>
  * It can be personalized with its builder, like define the provider and its parameters.
- * Instanciate EthereumJava like this :
- *
- *      EthereumJava ethereumJava = new EthereumJava.Builder()
- *          .provider(new RpcProvider("http://localhost:8545"))
- *          .build();
- *
- *  Then, modules are accessibles directly :
- *
- *      ethereumJava.eth.[...]
- *      ethereumJava.admin.[...]
- *      ethereumJava.personal.[...]
- *
+ * </p>
+ * <p>
+ * Instanciate EthereumJava thanks to the {@link Builder Builder} like this :
+ * <pre>
+ * {@code
+ * EthereumJava ethereumJava = new EthereumJava.Builder()
+ *      .provider(new RpcProvider("http://localhost:8545"))
+ *      .build();
+ * }</pre>
+ * </p>
+ * <p>
+ * <p>
+ * Then, modules are accessibles directly :
+ * <pre>
+ *  {@code
+ *  ethereumJava.eth.[...]
+ *  ethereumJava.admin.[...]
+ *  ethereumJava.personal.[...]
+ *  }</pre>
+ * </p>
  */
 public class EthereumJava {
 
@@ -62,6 +75,8 @@ public class EthereumJava {
     public Eth eth;
     /**
      * The Contract module, allowing to communicate with a deployed contract on Ethereum blockchain.
+     *
+     * @see Contract
      */
     public Contract contract;
 
@@ -80,8 +95,9 @@ public class EthereumJava {
     }
 
     /**
-     * Builder used to parameterize EthereumJava instance.
+     * Builder parameterize EthereumJava instance.
      * You can set the provider, then build to get the instance.
+     * <p>
      * <b>Caution:</b> there is no default provider.
      */
     public static class Builder {
@@ -112,7 +128,7 @@ public class EthereumJava {
          *                               the provider
          */
         public EthereumJava build() throws EthereumJavaException {
-            if (this.provider == null || handler == null){
+            if (this.provider == null || handler == null) {
                 throw new EthereumJavaException("Missing provider");
             }
             provider.init();
