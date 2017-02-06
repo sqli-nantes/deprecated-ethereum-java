@@ -1,26 +1,8 @@
 # Ethereum-java
 
-[![Build Status](https://travis-ci.org/sqli-nantes/ethereum-java.svg?branch=master)](https://travis-ci.org/sqli-nantes/ethereum-java)
-[ ![Download](https://api.bintray.com/packages/sqli-nantes/ethereum-java/ethereum-java-core/images/download.svg) ](https://bintray.com/sqli-nantes/ethereum-java/ethereum-java-core/_latestVersion)
+This project is deprecated.
 
-Java API to communicate with an Ethereum Node via RPC or IPC
-
-
-## How to execute tests ?
-
-Run Geth node using the prerequisite script in ethereum-java-core/src/test/resources :
-```bash
-./prerequisite.sh
-```
-Then run test suite:
-```
-./gradlew test
-```
-
-To stop the prerequisite.sh use :
-```bash
-kill $PID_prerequisite.sh
-```
+See https://github.com/sqli-nantes/ethereum-android
 
 ## License
 
